@@ -11,4 +11,7 @@
     <string name="contrase_a">Contraseña:</string>
     <string name="ingrese_su_contrase_a">Ingrese su Contraseña</string>
     <string name="listas_personas">Listas Personas</string>
+    <string name="telefono">Telefono:</string>
+    <string name="tel_fono">Teléfono</string>
+    <string name="ingrese_un_celular">Ingrese un celular</string>
 </resources>

@@ -24,7 +24,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName4"
+            android:id="@+id/usuario"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -46,7 +46,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName"
+            android:id="@+id/nom"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -69,7 +69,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName2"
+            android:id="@+id/apellido"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -77,29 +77,6 @@
             android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="@string/ingrese_sus_apellidos"
-            android:inputType="textPersonName"
-            android:autofillHints="" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp"
-            android:fontFamily="@font/aclonica"
-            android:text="@string/correo"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/editTextTextPersonName3"
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp"
-            android:ems="10"
-            android:hint="@string/ingrese_su_correo"
             android:inputType="textPersonName"
             android:autofillHints="" />
 
@@ -115,34 +92,81 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName5"
+            android:id="@+id/contra"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/ingrese_su_contrase_a"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/aclonica"
+            android:text="@string/correo"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/correo"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
             android:ems="10"
-            android:hint="@string/ingrese_su_contrase_a"
-            android:inputType="textPassword"
+            android:hint="@string/ingrese_su_correo"
+            android:inputType="textPersonName"
             android:autofillHints="" />
+
+        <TextView
+            android:id="@+id/Telefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/aclonica"
+            android:text="@string/tel_fono"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/celular"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/ingrese_un_celular"
+            android:inputType="number" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/listas_personas"
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
+            android:text="@string/listas_personas"
             android:textSize="30sp" />
 
         <ListView
+            android:id="@+id/muestra"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp" >
+            android:layout_marginBottom="5dp">
 
         </ListView>
 

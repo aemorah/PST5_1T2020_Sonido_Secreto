@@ -1,13 +1,13 @@
 package com.example.smartsound.model;
 
 public class Persona {
-    public String pid;
-    public String nombre;
-    public String apellidos;
-    public String correo;
-    public String usuario;
-    public String clave;
-    public String puesto;
+    private String pid;
+    private String nombre;
+    private String apellidos;
+    private String correo;
+    private String usuario;
+    private String clave;
+    private String telefono;
 
     public Persona() {
     }
@@ -52,12 +52,12 @@ public class Persona {
         this.clave = clave;
     }
 
-    public String getPuesto() {
-        return puesto;
+    public String getTelefono() {
+        return telefono;
     }
 
-    public void setPuesto(String puesto) {
-        this.puesto = puesto;
+    public void setTelefono(String puesto) {
+        this.telefono = puesto;
     }
 
     public String getUsuario() {
