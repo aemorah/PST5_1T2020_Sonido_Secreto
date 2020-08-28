@@ -1,7 +1,13 @@
 package com.example.smartsound.model;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
+import java.util.Objects;
+
 public class Persona {
-    private String pid;
+    //private String pid;
     private String nombre;
     private String apellidos;
     private String correo;
@@ -12,13 +18,13 @@ public class Persona {
     public Persona() {
     }
 
-    public String getPid() {
+    /*public String getPid() {
         return pid;
     }
 
     public void setPid(String pid) {
         this.pid = pid;
-    }
+    }*/
 
     public String getNombre() {
         return nombre;
@@ -72,4 +78,18 @@ public class Persona {
     public String toString() {
         return usuario;
     }
+
+//    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof Persona)) return false;
+//        Persona persona = (Persona) o;
+//        return Objects.equals(getNombre(), persona.getNombre()) &&
+//                Objects.equals(getApellidos(), persona.getApellidos()) &&
+//                Objects.equals(getCorreo(), persona.getCorreo()) &&
+//                Objects.equals(getUsuario(), persona.getUsuario()) &&
+//                Objects.equals(getClave(), persona.getClave()) &&
+//                Objects.equals(getTelefono(), persona.getTelefono());
+//    }
 }

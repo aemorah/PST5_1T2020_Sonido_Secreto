@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void listarDatos() {
-        databaseReference.child("Usuario").addValueEventListener(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listaPersonas.clear();
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                     Persona p= objSnapchot.getValue(Persona.class);
                     listaPersonas.add(p);
 
-                    arrayAdapterPersona = new ArrayAdapter<Persona>(MainActivity.this,android.R.layout.simple_list_item_1,listaPersonas);
+                    arrayAdapterPersona = new ArrayAdapter<>(MainActivity.this,android.R.layout.simple_list_item_1,listaPersonas);
                     listViewPersonas.setAdapter(arrayAdapterPersona);
                 }
 
@@ -109,36 +109,36 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()){
                 case R.id.icon_add:{
                     Persona per=new Persona();
-                    per.setPid(UUID.randomUUID().toString());
+                    //per.setPid(UUID.randomUUID().toString());
                     per.setApellidos(valorApellido);
                     per.setClave(valorContra);
                     per.setCorreo(valorCorreo);
                     per.setUsuario(valorUser);
                     per.setNombre(valorNom);
                     per.setTelefono(valorCelu);
-                    databaseReference.child("Usuario").child(per.getPid()).setValue(per);
+                    databaseReference.child(per.getUsuario()).child("Datos").setValue(per);
                     Toast.makeText(this,"Agregar",Toast.LENGTH_SHORT).show();
                     vaciar();
                     break;
                 }
                 case R.id.icon_save: {
                     Persona per=new Persona();
-                    per.setPid(personaSel.getPid());
+                    //per.setPid(personaSel.getPid());
                     per.setUsuario(user.getText().toString().trim());
                     per.setApellidos(apellido.getText().toString().trim());
                     per.setNombre(nombre.getText().toString().trim());
                     per.setCorreo(correo.getText().toString().trim());
                     per.setClave(password.getText().toString().trim());
                     per.setTelefono(celular.getText().toString().trim());
-                    databaseReference.child("Usuario").child(per.getPid()).setValue(per);
+                    databaseReference.child("Administrador").child(per.getUsuario()).setValue(per);
                     Toast.makeText(this, "Actualizar", Toast.LENGTH_SHORT).show();
                     vaciar();
                     break;
                 }
                 case R.id.icon_delete: {
                     Persona per=new Persona();
-                    per.setPid(personaSel.getPid());
-                    databaseReference.child("Usuario").child(per.getPid()).removeValue();
+                    //per.setPid(personaSel.getPid());
+                    databaseReference.child("Administrador").child(per.getUsuario()).removeValue();
                     Toast.makeText(this, "Borrar", Toast.LENGTH_SHORT).show();
                     vaciar();
                     break;

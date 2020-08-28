@@ -28,11 +28,12 @@
         <EditText
             android:id="@+id/usuario"
             android:layout_width="350dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
             android:autofillHints=""
+            android:background="@drawable/edit_round"
             android:ems="10"
             android:hint="@string/ingrese_su_usuario"
             android:inputType="textPersonName" />
@@ -51,11 +52,12 @@
         <EditText
             android:id="@+id/nom"
             android:layout_width="350dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
             android:autofillHints=""
+            android:background="@drawable/edit_round"
             android:ems="10"
             android:hint="@string/ingrese_su_nombre"
             android:inputType="textPersonName" />
@@ -75,11 +77,12 @@
         <EditText
             android:id="@+id/apellido"
             android:layout_width="350dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
             android:autofillHints=""
+            android:background="@drawable/edit_round"
             android:ems="10"
             android:hint="@string/ingrese_sus_apellidos"
             android:inputType="textPersonName" />
@@ -99,11 +102,12 @@
         <EditText
             android:id="@+id/contra"
             android:layout_width="350dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
             android:autofillHints=""
+            android:background="@drawable/edit_round"
             android:ems="10"
             android:hint="@string/ingrese_su_contrase_a"
             android:inputType="textPassword" />
@@ -123,23 +127,25 @@
         <EditText
             android:id="@+id/correo"
             android:layout_width="350dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
             android:autofillHints=""
+            android:background="@drawable/edit_round"
             android:ems="10"
             android:hint="@string/ingrese_su_correo"
             android:inputType="textPersonName" />
 
         <TextView
             android:id="@+id/Telefono"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
             android:fontFamily="@font/aclonica"
+
             android:text="@string/tel_fono"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
@@ -147,11 +153,12 @@
         <EditText
             android:id="@+id/celular"
             android:layout_width="350dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
             android:autofillHints=""
+            android:background="@drawable/edit_round"
             android:ems="10"
             android:hint="@string/ingrese_un_celular"
             android:inputType="number" />
