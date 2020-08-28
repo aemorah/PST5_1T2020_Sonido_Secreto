@@ -41,30 +41,55 @@ public class Login extends AppCompatActivity {
     }
 
     public void ingresar(View view){
-        ingresoAdmin();
+        ingreso();
     }
 
-    private void ingresoAdmin(){
-        databaseReference.child(et1.getText().toString()).child("Datos").addValueEventListener(new ValueEventListener(){
+    private void ingreso(){
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener(){
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Persona p = snapshot.getValue(Persona.class);
-                if (p != null) {
+                System.out.println(snapshot);
+                System.out.println(snapshot.child(et1.getText().toString()).exists());
+                int comprobador=0;
+                if (snapshot.child(et1.getText().toString()).exists()){
+                    Persona p = snapshot.child(et1.getText().toString()).child("Datos").getValue(Persona.class);
                     dato1 = p.getUsuario();
                     contra = p.getClave();
                     if(et2.getText().toString().equals(contra)){
+                        et1.setText("");
+                        et2.setText("");
                         databaseReference.child("Temporal").setValue(p);
                         Intent i = new Intent(Login.this, MenuIngreso.class );
                         startActivity(i);
                     }else
                         Toast.makeText(Login.this, "Contraseña incorrecta",
                                 Toast.LENGTH_SHORT).show();
-                }else
-                    Toast.makeText(Login.this, "No existe un artículo con dicho Usuario",
-                            Toast.LENGTH_SHORT).show();
-                System.out.println("Aqui");
-                System.out.println(dato1);
-                System.out.println(contra);
+                } else{
+                    for (DataSnapshot objSnapchot : snapshot.getChildren()){
+                        if(objSnapchot.hasChild("Usuarios/"+et1.getText().toString())){
+                            Persona p = objSnapchot.child("Usuarios").child(et1.getText().toString()).getValue(Persona.class);
+                            dato1 = p.getUsuario();
+                            contra = p.getClave();
+                            comprobador = 1;
+                            if(et2.getText().toString().equals(contra)){
+                                et1.setText("");
+                                et2.setText("");
+                                databaseReference.child("Temporal").setValue(p);
+                                Intent i = new Intent(Login.this, IngresoGuest.class );
+                                startActivity(i);
+                            }else
+                                Toast.makeText(Login.this, "Contraseña incorrecta",
+                                        Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    if (comprobador==0){
+                        Toast.makeText(Login.this, "No existe un artículo con dicho Usuario",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+
             }
 
             @Override

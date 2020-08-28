@@ -12,14 +12,14 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class MenuIngreso extends AppCompatActivity {
+public class IngresoGuest extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_ingreso);
-
+        setContentView(R.layout.activity_ingreso_guest);
         inicializarFirebase();
     }
 

@@ -5,4 +5,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#353E4F"
-    tools:context=".MenuIngreso"/>
+    tools:context=".IngresoGuest"/>
