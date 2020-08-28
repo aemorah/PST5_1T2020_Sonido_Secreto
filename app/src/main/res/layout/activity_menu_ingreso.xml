@@ -5,15 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#353E4F"
-    tools:context=".Bienvenida">
+    tools:context=".MenuIngreso">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="215dp"
-        android:layout_height="226dp"
-        android:src="@drawable/icon_4399555_640"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

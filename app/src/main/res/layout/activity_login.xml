@@ -63,17 +63,23 @@
         android:id="@+id/button3"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:layout_gravity="center"
+        android:layout_marginTop="15dp"
         android:background="@drawable/button_round"
-        android:text="Button" />
+        android:fontFamily="@font/aclonica"
+        android:onClick="ingresar"
+        android:text="Ingreso"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/button4"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center"
+        android:layout_marginTop="20dp"
         android:background="@drawable/button_round"
-        android:text="Button" />
+        android:fontFamily="@font/aclonica"
+        android:onClick="registro"
+        android:text="Registro"
+        android:textSize="18sp" />
 </LinearLayout>

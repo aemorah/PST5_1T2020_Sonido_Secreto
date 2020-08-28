@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#353E4F"
         android:orientation="vertical">
 
         <TextView
@@ -21,6 +22,7 @@
             android:layout_marginBottom="5dp"
             android:fontFamily="@font/aclonica"
             android:text="@string/usuario"
+            android:textColor="#FFFFFF"
             android:textSize="20sp" />
 
         <EditText
@@ -30,10 +32,10 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
+            android:autofillHints=""
             android:ems="10"
             android:hint="@string/ingrese_su_usuario"
-            android:inputType="textPersonName"
-            android:autofillHints="" />
+            android:inputType="textPersonName" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -43,6 +45,7 @@
             android:layout_marginBottom="5dp"
             android:fontFamily="@font/aclonica"
             android:text="@string/nombre"
+            android:textColor="#FFFFFF"
             android:textSize="20sp" />
 
         <EditText
@@ -52,10 +55,10 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
+            android:autofillHints=""
             android:ems="10"
             android:hint="@string/ingrese_su_nombre"
-            android:inputType="textPersonName"
-            android:autofillHints="" />
+            android:inputType="textPersonName" />
 
         <TextView
             android:id="@+id/textView"
@@ -66,6 +69,7 @@
             android:layout_marginBottom="5dp"
             android:fontFamily="@font/aclonica"
             android:text="@string/apellidos"
+            android:textColor="#FFFFFF"
             android:textSize="20sp" />
 
         <EditText
@@ -75,10 +79,10 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
+            android:autofillHints=""
             android:ems="10"
             android:hint="@string/ingrese_sus_apellidos"
-            android:inputType="textPersonName"
-            android:autofillHints="" />
+            android:inputType="textPersonName" />
 
         <TextView
             android:id="@+id/textView5"
@@ -89,6 +93,7 @@
             android:layout_marginBottom="5dp"
             android:fontFamily="@font/aclonica"
             android:text="@string/contrase_a"
+            android:textColor="#FFFFFF"
             android:textSize="20sp" />
 
         <EditText
@@ -112,6 +117,7 @@
             android:layout_marginBottom="5dp"
             android:fontFamily="@font/aclonica"
             android:text="@string/correo"
+            android:textColor="#FFFFFF"
             android:textSize="20sp" />
 
         <EditText
@@ -121,10 +127,10 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
+            android:autofillHints=""
             android:ems="10"
             android:hint="@string/ingrese_su_correo"
-            android:inputType="textPersonName"
-            android:autofillHints="" />
+            android:inputType="textPersonName" />
 
         <TextView
             android:id="@+id/Telefono"
@@ -135,6 +141,7 @@
             android:layout_marginBottom="5dp"
             android:fontFamily="@font/aclonica"
             android:text="@string/tel_fono"
+            android:textColor="#FFFFFF"
             android:textSize="20sp" />
 
         <EditText
