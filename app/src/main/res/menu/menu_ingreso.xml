@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/icon_exit"
+        android:icon="@drawable/ic_exit"
+        android:title="Salir"
+        app:showAsAction="always"/>
     <item android:id="@+id/icon_add"
         android:icon="@drawable/ic_add"
-        android:title="agregar"
-        app:showAsAction="ifRoom"/>
+        android:title="Agregar"
+        app:showAsAction="always"/>
     <item android:id="@+id/icon_save"
         android:icon="@drawable/ic_save"
-        android:title="guardar"
+        android:title="Actualizar"
         app:showAsAction="ifRoom"/>
     <item android:id="@+id/icon_delete"
         android:icon="@drawable/ic_delete"
-        android:title="borrar"
+        android:title="Borrar"
         app:showAsAction="ifRoom"/>
+
 
 </menu>

@@ -14,6 +14,7 @@ public class Persona {
     private String usuario;
     private String clave;
     private String telefono;
+    private String contrasenaDispositivo;
 
     public Persona() {
     }
@@ -74,22 +75,17 @@ public class Persona {
         this.usuario = usuario;
     }
 
+    public String getContrasenaDispositivo() {
+        return contrasenaDispositivo;
+    }
+
+    public void setContrasenaDispositivo(String contrasenaDispositivo) {
+        this.contrasenaDispositivo = contrasenaDispositivo;
+    }
+
     @Override
     public String toString() {
         return usuario;
     }
 
-//    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (!(o instanceof Persona)) return false;
-//        Persona persona = (Persona) o;
-//        return Objects.equals(getNombre(), persona.getNombre()) &&
-//                Objects.equals(getApellidos(), persona.getApellidos()) &&
-//                Objects.equals(getCorreo(), persona.getCorreo()) &&
-//                Objects.equals(getUsuario(), persona.getUsuario()) &&
-//                Objects.equals(getClave(), persona.getClave()) &&
-//                Objects.equals(getTelefono(), persona.getTelefono());
-//    }
 }

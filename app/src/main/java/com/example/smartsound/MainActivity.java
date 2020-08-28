@@ -1,8 +1,10 @@
 package com.example.smartsound;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<Persona> arrayAdapterPersona;
 
 
-    EditText user, nombre, apellido, correo, password, celular;
+    EditText user, nombre, apellido, correo, password, celular,contraDispo;
     ListView listViewPersonas;
-    String valorUser, valorNom, valorCorreo, valorContra, valorApellido, valorCelu;
+    String valorUser, valorNom, valorCorreo, valorContra, valorApellido, valorCelu, valorPassDispo;
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         correo=findViewById(R.id.correo);
         password=findViewById(R.id.contra);
         celular=findViewById(R.id.celular);
+        contraDispo=findViewById(R.id.contraDis);
 
         listViewPersonas=findViewById(R.id.muestra);
         inicializarFirebase();
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 password.setText(personaSel.getClave());
                 correo.setText(personaSel.getCorreo());
                 celular.setText(personaSel.getTelefono());
+                contraDispo.setText(personaSel.getContrasenaDispositivo());
             }
         });
     }
@@ -105,45 +109,68 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        if (validaciones()){
-            switch (item.getItemId()){
-                case R.id.icon_add:{
-                    Persona per=new Persona();
-                    //per.setPid(UUID.randomUUID().toString());
-                    per.setApellidos(valorApellido);
-                    per.setClave(valorContra);
-                    per.setCorreo(valorCorreo);
-                    per.setUsuario(valorUser);
-                    per.setNombre(valorNom);
-                    per.setTelefono(valorCelu);
-                    databaseReference.child(per.getUsuario()).child("Datos").setValue(per);
-                    Toast.makeText(this,"Agregar",Toast.LENGTH_SHORT).show();
-                    vaciar();
-                    break;
+        if(item.getItemId() == R.id.icon_exit){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.app_name);
+            builder.setIcon(R.drawable.edit_aviso);
+            builder.setMessage("Seguro quiere regresar?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    finish();
                 }
-                case R.id.icon_save: {
-                    Persona per=new Persona();
-                    //per.setPid(personaSel.getPid());
-                    per.setUsuario(user.getText().toString().trim());
-                    per.setApellidos(apellido.getText().toString().trim());
-                    per.setNombre(nombre.getText().toString().trim());
-                    per.setCorreo(correo.getText().toString().trim());
-                    per.setClave(password.getText().toString().trim());
-                    per.setTelefono(celular.getText().toString().trim());
-                    databaseReference.child("Administrador").child(per.getUsuario()).setValue(per);
-                    Toast.makeText(this, "Actualizar", Toast.LENGTH_SHORT).show();
-                    vaciar();
-                    break;
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
                 }
-                case R.id.icon_delete: {
-                    Persona per=new Persona();
-                    //per.setPid(personaSel.getPid());
-                    databaseReference.child("Administrador").child(per.getUsuario()).removeValue();
-                    Toast.makeText(this, "Borrar", Toast.LENGTH_SHORT).show();
-                    vaciar();
-                    break;
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+
+        }else{
+            if (validaciones()) {
+                switch (item.getItemId()) {
+                    case R.id.icon_add: {
+                        Persona per = new Persona();
+                        //per.setPid(UUID.randomUUID().toString());
+                        per.setApellidos(valorApellido);
+                        per.setClave(valorContra);
+                        per.setCorreo(valorCorreo);
+                        per.setUsuario(valorUser);
+                        per.setNombre(valorNom);
+                        per.setTelefono(valorCelu);
+                        per.setContrasenaDispositivo(valorPassDispo);
+                        databaseReference.child(per.getUsuario()).child("Datos").setValue(per);
+                        Toast.makeText(this, "Agregar", Toast.LENGTH_SHORT).show();
+                        vaciar();
+                        break;
+                    }
+                    case R.id.icon_save: {
+                        Persona per = new Persona();
+                        //per.setPid(personaSel.getPid());
+                        per.setUsuario(user.getText().toString().trim());
+                        per.setApellidos(apellido.getText().toString().trim());
+                        per.setNombre(nombre.getText().toString().trim());
+                        per.setCorreo(correo.getText().toString().trim());
+                        per.setClave(password.getText().toString().trim());
+                        per.setTelefono(celular.getText().toString().trim());
+                        per.setContrasenaDispositivo(contraDispo.getText().toString());
+                        databaseReference.child(per.getUsuario()).child("Datos").setValue(per);
+                        Toast.makeText(this, "Actualizar", Toast.LENGTH_SHORT).show();
+                        vaciar();
+                        break;
+                    }
+                    case R.id.icon_delete: {
+                        Persona per = new Persona();
+                        //per.setPid(personaSel.getPid());
+                        databaseReference.child("Administrador").child(per.getUsuario()).removeValue();
+                        Toast.makeText(this, "Borrar", Toast.LENGTH_SHORT).show();
+                        vaciar();
+                        break;
+                    }
+                    default:
+                        break;
                 }
-                default:break;
             }
 
 
@@ -159,17 +186,20 @@ public class MainActivity extends AppCompatActivity {
         correo.setText("");
         password.setText("");
         celular.setText("");
+        contraDispo.setText("");
     }
 
     private boolean validaciones(){
-        valorUser= user.getText().toString();
-        valorNom=nombre.getText().toString();
-        valorCorreo=correo.getText().toString();
-        valorContra= password.getText().toString();
-        valorApellido= apellido.getText().toString();
-        valorCelu=celular.getText().toString();
+        valorUser= user.getText().toString().toLowerCase().trim();
+        valorNom=nombre.getText().toString().trim();
+        valorCorreo=correo.getText().toString().trim();
+        valorContra= password.getText().toString().trim();
+        valorApellido= apellido.getText().toString().trim();
+        valorCelu=celular.getText().toString().trim();
+        valorPassDispo = contraDispo.getText().toString().trim();
         if (valorUser.equals("") || valorNom.equals("") || valorCorreo.equals("") ||
-                valorContra.equals("")|| valorApellido.equals("")|| valorCelu.equals("")){
+                valorContra.equals("")|| valorApellido.equals("")|| valorCelu.equals("") ||
+                valorPassDispo.equals("")){
             if (valorUser.equals(""))
                 user.setError("Se requiere el Usuario");
             if (valorNom.equals(""))
@@ -182,6 +212,8 @@ public class MainActivity extends AppCompatActivity {
                 apellido.setError("Se requiere el Apellido");
             if (valorCelu.equals(""))
                 celular.setError("Se requiere el Celular");
+            if (valorPassDispo.equals(""))
+                contraDispo.setError("Se requiere el Contraseña para el dispositivo");
             return false;
         }
 
