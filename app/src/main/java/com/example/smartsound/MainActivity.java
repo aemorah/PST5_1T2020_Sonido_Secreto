@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
+    Persona personaSel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +53,19 @@ public class MainActivity extends AppCompatActivity {
         listViewPersonas=findViewById(R.id.muestra);
         inicializarFirebase();
         listarDatos();
+
+        listViewPersonas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                personaSel= (Persona) adapterView.getItemAtPosition(i);
+                user.setText(personaSel.getUsuario());
+                nombre.setText(personaSel.getNombre());
+                apellido.setText(personaSel.getApellidos());
+                password.setText(personaSel.getClave());
+                correo.setText(personaSel.getCorreo());
+                celular.setText(personaSel.getTelefono());
+            }
+        });
     }
 
     private void listarDatos() {
@@ -105,11 +122,25 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 }
                 case R.id.icon_save: {
-                    Toast.makeText(this, "Guardar", Toast.LENGTH_SHORT).show();
+                    Persona per=new Persona();
+                    per.setPid(personaSel.getPid());
+                    per.setUsuario(user.getText().toString().trim());
+                    per.setApellidos(apellido.getText().toString().trim());
+                    per.setNombre(nombre.getText().toString().trim());
+                    per.setCorreo(correo.getText().toString().trim());
+                    per.setClave(password.getText().toString().trim());
+                    per.setTelefono(celular.getText().toString().trim());
+                    databaseReference.child("Usuario").child(per.getPid()).setValue(per);
+                    Toast.makeText(this, "Actualizar", Toast.LENGTH_SHORT).show();
+                    vaciar();
                     break;
                 }
                 case R.id.icon_delete: {
+                    Persona per=new Persona();
+                    per.setPid(personaSel.getPid());
+                    databaseReference.child("Usuario").child(per.getPid()).removeValue();
                     Toast.makeText(this, "Borrar", Toast.LENGTH_SHORT).show();
+                    vaciar();
                     break;
                 }
                 default:break;
