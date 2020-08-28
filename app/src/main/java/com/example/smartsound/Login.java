@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.smartsound.model.GuardadoUsuario;
 import com.example.smartsound.model.Persona;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
@@ -50,8 +51,8 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                System.out.println(snapshot);
-                System.out.println(snapshot.child(et1.getText().toString()).exists());
+                //System.out.println(snapshot);
+                //System.out.println(snapshot.child(et1.getText().toString()).exists());
                 int comprobador=0;
                 if (snapshot.child(et1.getText().toString()).exists()){
                     Persona p = snapshot.child(et1.getText().toString()).child("Datos").getValue(Persona.class);
@@ -60,7 +61,8 @@ public class Login extends AppCompatActivity {
                     if(et2.getText().toString().equals(contra)){
                         et1.setText("");
                         et2.setText("");
-                        databaseReference.child("Temporal").setValue(p);
+                        GuardadoUsuario.usuarioUsando=dato1;
+                        databaseReference.child("Temporal"+"-"+dato1).setValue(p);
                         Intent i = new Intent(Login.this, MenuIngreso.class );
                         startActivity(i);
                     }else
@@ -76,7 +78,8 @@ public class Login extends AppCompatActivity {
                             if(et2.getText().toString().equals(contra)){
                                 et1.setText("");
                                 et2.setText("");
-                                databaseReference.child("Temporal").setValue(p);
+                                GuardadoUsuario.usuarioUsando=dato1;
+                                databaseReference.child("Temporal"+"-"+dato1).setValue(p);
                                 Intent i = new Intent(Login.this, IngresoGuest.class );
                                 startActivity(i);
                             }else

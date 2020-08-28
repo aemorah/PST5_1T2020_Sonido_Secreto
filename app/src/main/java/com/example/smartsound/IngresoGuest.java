@@ -21,6 +21,7 @@ public class IngresoGuest extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingreso_guest);
         inicializarFirebase();
+
     }
 
     private void inicializarFirebase(){
@@ -38,7 +39,6 @@ public class IngresoGuest extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.icon_exit){
-            databaseReference.child("Temporal").removeValue();
             finish();
         }
         return true;

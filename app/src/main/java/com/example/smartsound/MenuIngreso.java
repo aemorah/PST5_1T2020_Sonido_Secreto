@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.smartsound.model.GuardadoUsuario;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,7 +20,6 @@ public class MenuIngreso extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_ingreso);
-
         inicializarFirebase();
     }
 
@@ -38,7 +38,6 @@ public class MenuIngreso extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.icon_exit){
-            databaseReference.child("Temporal").removeValue();
             finish();
         }
         return true;
