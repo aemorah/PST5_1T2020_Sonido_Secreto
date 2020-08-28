@@ -6,20 +6,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.smartsound.model.Persona;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+    private List<Persona> listaPersonas= new ArrayList<Persona>();
+    ArrayAdapter<Persona> arrayAdapterPersona;
+
+
     EditText user, nombre, apellido, correo, password, celular;
-    ListView listaPersonas;
+    ListView listViewPersonas;
     String valorUser, valorNom, valorCorreo, valorContra, valorApellido, valorCelu;
 
     FirebaseDatabase firebaseDatabase;
@@ -36,8 +46,33 @@ public class MainActivity extends AppCompatActivity {
         password=findViewById(R.id.contra);
         celular=findViewById(R.id.celular);
 
-        listaPersonas=findViewById(R.id.muestra);
+        listViewPersonas=findViewById(R.id.muestra);
+        inicializarFirebase();
+        listarDatos();
     }
+
+    private void listarDatos() {
+        databaseReference.child("Usuario").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listaPersonas.clear();
+                for (DataSnapshot objSnapchot : snapshot.getChildren()){
+                    Persona p= objSnapchot.getValue(Persona.class);
+                    listaPersonas.add(p);
+
+                    arrayAdapterPersona = new ArrayAdapter<Persona>(MainActivity.this,android.R.layout.simple_list_item_1,listaPersonas);
+                    listViewPersonas.setAdapter(arrayAdapterPersona);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void inicializarFirebase(){
         FirebaseApp.initializeApp(this);
         firebaseDatabase=FirebaseDatabase.getInstance();
@@ -52,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        inicializarFirebase();
+
         if (validaciones()){
             switch (item.getItemId()){
                 case R.id.icon_add:{
@@ -64,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     per.setUsuario(valorUser);
                     per.setNombre(valorNom);
                     per.setTelefono(valorCelu);
-                    databaseReference.child("Persona").child(per.getPid()).setValue(per);
+                    databaseReference.child("Usuario").child(per.getPid()).setValue(per);
                     Toast.makeText(this,"Agregar",Toast.LENGTH_SHORT).show();
                     vaciar();
                     break;
