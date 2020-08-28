@@ -20,7 +20,7 @@ public class Bienvenida extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Intent intent = new Intent(Bienvenida.this, MainActivity.class);
+                Intent intent = new Intent(Bienvenida.this, Login.class);
                 startActivity(intent);
                 finish();
             }
