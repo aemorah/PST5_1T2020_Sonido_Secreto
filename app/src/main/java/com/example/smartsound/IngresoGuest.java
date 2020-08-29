@@ -54,7 +54,7 @@ public class IngresoGuest extends AppCompatActivity {
             ArrayList<String> matches=data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             Text.setText(matches.get(0).toString());
             System.out.println(matches.get(0).toString());
-
+//prueba de commit
 
         }
 
