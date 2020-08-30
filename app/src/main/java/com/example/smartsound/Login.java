@@ -81,6 +81,7 @@ public class Login extends AppCompatActivity {
                                     et1.setText("");
                                     et2.setText("");
                                     GuardadoUsuario.usuarioUsando = dato1;
+                                    GuardadoUsuario.parent = objSnapchot.getKey();
                                     Intent i = new Intent(Login.this, IngresoGuest.class);
                                     startActivity(i);
                                 } else
