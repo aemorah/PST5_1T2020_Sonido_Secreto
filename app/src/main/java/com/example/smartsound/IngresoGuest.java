@@ -6,13 +6,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -33,12 +37,20 @@ import java.util.List;
 
 public class IngresoGuest extends AppCompatActivity {
     private List<String> listaDispo= new ArrayList<>();
-    ArrayAdapter<String> arrayAdapterDispo;
+    private  List<String> listaStatus= new ArrayList<>();
+    private List<Integer> listaImg = new ArrayList<>();
+    String[] arrayDis;
+    String[] arraySta;
+    Integer[] arrayimg;
+
+//    ArrayAdapter<String> arrayAdapterDispo;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     ArrayList<String> matches;
     //Parametros del reconocimiento de voz
     TextView tv;
+
+    String dispoSel;
     private ImageView image;
     private TextView text;
     private static final int RECOGNIZER_RESULT =1;
@@ -65,7 +77,24 @@ public class IngresoGuest extends AppCompatActivity {
 
             }
         });
-        listarDatos();
+        obtenerInfo();
+        System.out.println(listaDispo);
+        dispoSel="";
+
+        listViewDispo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                dispoSel= (String) adapterView.getItemAtPosition(i);
+                System.out.println(dispoSel);
+            }
+        });
+
+//        listViewDispo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                dispoSel= (String) adapterView.getItemAtPosition(i);
+//            }
+//        });
 
 
 
@@ -75,9 +104,12 @@ public class IngresoGuest extends AppCompatActivity {
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent speachIntent=new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                speachIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                startActivityForResult(speachIntent,RECOGNIZER_RESULT);
+                if (!dispoSel.equalsIgnoreCase("")) {
+                    Intent speachIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    speachIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    startActivityForResult(speachIntent, RECOGNIZER_RESULT);
+                }else
+                    Toast.makeText(IngresoGuest.this, "Seleccione Un Dispositivo", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -85,19 +117,19 @@ public class IngresoGuest extends AppCompatActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode==RECOGNIZER_RESULT && resultCode== RESULT_OK){
-            matches=data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+        if (requestCode == RECOGNIZER_RESULT && resultCode == RESULT_OK) {
+            matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             databaseReference.child(GuardadoUsuario.parent).addListenerForSingleValueEvent(new ValueEventListener() {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     text.setText(matches.get(0).toLowerCase());
-                    Persona p= snapshot.child("Usuarios").child(GuardadoUsuario.usuarioUsando).getValue(Persona.class);
+                    Persona p = snapshot.child("Usuarios").child(GuardadoUsuario.usuarioUsando).getValue(Persona.class);
                     assert p != null;
                     String palabraClave = p.getContrasenaDispositivo().trim();
                     if (palabraClave.equalsIgnoreCase(matches.get(0).trim())) {
-                        snapshot.child("Dispositivos").child("Comedor").getRef().setValue("on");
-                    }else{
+                        snapshot.child("Dispositivos").child(dispoSel).getRef().setValue("on");
+                    } else {
                         Toast.makeText(IngresoGuest.this, "Ingreso Incorrecto", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -109,24 +141,72 @@ public class IngresoGuest extends AppCompatActivity {
             });
 
             //System.out.println(matches.get(0));
-//prueba de commit
+            //prueba de commit
 
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+
     }
 
-    private void listarDatos() {
+    class MyAdapter extends ArrayAdapter<String>{
+        Context context;
+        String[] dispositivos;
+        String[] estado;
+        Integer[] imagenes;
+
+        MyAdapter(Context c, String[] dispositivos, String[] estado, Integer[] imagenes){
+            super(c,R.layout.row,R.id.interTitulo,dispositivos);
+            this.context=c;
+            this.dispositivos=dispositivos;
+            this.estado=estado;
+            this.imagenes=imagenes;
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            LayoutInflater layoutInflater= (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View row= layoutInflater.inflate(R.layout.row,parent,false);
+            ImageView images = row.findViewById(R.id.image);
+            TextView myDispositivos = row.findViewById(R.id.interTitulo);
+            TextView myStatus = row.findViewById(R.id.interStatus);
+
+            images.setImageResource(imagenes[position]);
+            myDispositivos.setText(dispositivos[position]);
+            myStatus.setText(estado[position]);
+
+            return row;
+        }
+    }
+
+    private void obtenerInfo() {
         databaseReference.child(GuardadoUsuario.parent).child("Dispositivos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listaDispo.clear();
+                listaStatus.clear();
+                listaImg.clear();
                 for (DataSnapshot objSnapchot : snapshot.getChildren()){
                     String etiqueta= objSnapchot.getKey();
+                    //System.out.println(etiqueta);
+                    String status= "Status: "+ objSnapchot.getValue();
+                    //System.out.println(status);
                     listaDispo.add(etiqueta);
+                    listaStatus.add(status);
+                    listaImg.add(R.drawable.edit_candado);
 
-                    arrayAdapterDispo = new ArrayAdapter<String>(IngresoGuest.this,android.R.layout.simple_list_item_1,listaDispo);
-                    listViewDispo.setAdapter(arrayAdapterDispo);
+                    arrayDis=new String[listaDispo.size()];
+                    arrayDis = listaDispo.toArray(arrayDis);
+                    arraySta=new String[listaStatus.size()];
+                    arraySta = listaStatus.toArray(arraySta);
+                    arrayimg=new Integer[listaImg.size()];
+                    arrayimg = listaImg.toArray(arrayimg);
+                    MyAdapter adapter =new MyAdapter(IngresoGuest.this,arrayDis,arraySta,arrayimg);
+                    listViewDispo.setAdapter(adapter);
+
+//                    arrayAdapterDispo = new ArrayAdapter<String>(IngresoGuest.this,android.R.layout.simple_list_item_1,listaDispo);
+//                    listViewDispo.setAdapter(arrayAdapterDispo);
                 }
 
             }
@@ -173,9 +253,12 @@ public class IngresoGuest extends AppCompatActivity {
         return true;
     }
 
-    public void cerrar(View view){
+    public void cerrar(View view) {
         //System.out.println(GuardadoUsuario.parent);
-        databaseReference.child(GuardadoUsuario.parent).child("Dispositivos").child("Comedor").setValue("off");
+        if (!dispoSel.equals("")) {
+            databaseReference.child(GuardadoUsuario.parent).child("Dispositivos").child(dispoSel).setValue("off");
+        }else
+            Toast.makeText(IngresoGuest.this, "Seleccione un Dispositivo", Toast.LENGTH_SHORT).show();
     }
 
 }
