@@ -240,7 +240,6 @@ public class IngresoGuest extends AppCompatActivity {
     }
 
     public void cerrar(View view) {
-        //System.out.println(GuardadoUsuario.parent);
         if (!dispoSel.equals("")) {
             databaseReference.child(GuardadoUsuario.parent).child("Dispositivos").child(dispoSel).child("Activacion").setValue("off");
         }else

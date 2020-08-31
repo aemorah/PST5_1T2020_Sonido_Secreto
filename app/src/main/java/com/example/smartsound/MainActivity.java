@@ -30,8 +30,6 @@ import java.util.List;
 //import com.example.smartsound.model.Persona;
 
 public class MainActivity extends AppCompatActivity {
-    private List<Persona> listaPersonas= new ArrayList<Persona>();
-    ArrayAdapter<Persona> arrayAdapterPersona;
 
 
     EditText user, nombre, apellido, correo, password, celular,contraDispo;
@@ -41,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
-    Persona personaSel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,50 +47,14 @@ public class MainActivity extends AppCompatActivity {
         nombre=findViewById(R.id.nom);
         apellido=findViewById(R.id.apellido);
         correo=findViewById(R.id.correo);
-        password=findViewById(R.id.apellido);
+        password=findViewById(R.id.contra);
         celular=findViewById(R.id.celular);
         contraDispo=findViewById(R.id.contraDis);
 
-        listViewPersonas=findViewById(R.id.muestra);
         inicializarFirebase();
-        listarDatos();
 
-        listViewPersonas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                personaSel= (Persona) adapterView.getItemAtPosition(i);
-                user.setText(personaSel.getUsuario());
-                nombre.setText(personaSel.getNombre());
-                apellido.setText(personaSel.getApellidos());
-                password.setText(personaSel.getClave());
-                correo.setText(personaSel.getCorreo());
-                celular.setText(personaSel.getTelefono());
-                contraDispo.setText(personaSel.getContrasenaDispositivo());
-            }
-        });
     }
 
-    private void listarDatos() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                listaPersonas.clear();
-                for (DataSnapshot objSnapchot : snapshot.getChildren()){
-                    Persona p= objSnapchot.getValue(Persona.class);
-                    listaPersonas.add(p);
-
-                    arrayAdapterPersona = new ArrayAdapter<>(MainActivity.this,android.R.layout.simple_list_item_1,listaPersonas);
-                    listViewPersonas.setAdapter(arrayAdapterPersona);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
 
     private void inicializarFirebase(){
         FirebaseApp.initializeApp(this);

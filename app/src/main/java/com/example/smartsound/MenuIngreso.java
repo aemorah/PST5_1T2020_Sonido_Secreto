@@ -88,21 +88,18 @@ public class MenuIngreso extends AppCompatActivity {
     public void hablar(View view){
         Intent i = new Intent(this, DesbloquearPuerta.class );
         startActivity(i);
-        finish();
 
     }
 
     public void adminDispo(View view){
         Intent i = new Intent(this, AdministrarDispo.class );
         startActivity(i);
-        finish();
 
     }
 
     public void registraUser(View view){
         Intent i = new Intent(this, RegistrarUsuario.class );
         startActivity(i);
-        finish();
 
 
     }
@@ -110,8 +107,6 @@ public class MenuIngreso extends AppCompatActivity {
     public void adminUser(View view){
         Intent i = new Intent(this, AdministrarUsuarios.class );
         startActivity(i);
-        finish();
-
     }
 
 }
