@@ -4,40 +4,25 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.smartsound.model.GuardadoUsuario;
 import com.example.smartsound.model.Persona;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class RegistrarUsuario extends AppCompatActivity {
 
 
     EditText user, nombre, apellido, correo, password, celular,contraDispo;
-    ListView listViewPersonas;
     String valorUser, valorNom, valorCorreo, valorContra, valorApellido, valorCelu, valorPassDispo;
-
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-
-    Persona personaSel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

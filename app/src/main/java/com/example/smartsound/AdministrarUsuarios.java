@@ -130,7 +130,6 @@ public class AdministrarUsuarios extends AppCompatActivity {
 
         }else{
             databaseReference.child(GuardadoUsuario.usuarioUsando).child("Usuarios").child(userSel).removeValue();
-            //Toast.makeText(this, "Borrar", Toast.LENGTH_SHORT).show();
         }
         return true;
 

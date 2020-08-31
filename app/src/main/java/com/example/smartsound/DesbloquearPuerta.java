@@ -237,7 +237,6 @@ public class DesbloquearPuerta extends AppCompatActivity {
     }
 
     public void cerrar(View view) {
-        //System.out.println(GuardadoUsuario.parent);
         if (!dispoSel.equals("")) {
             databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").child(dispoSel).child("Activacion").setValue("off");
         }else
