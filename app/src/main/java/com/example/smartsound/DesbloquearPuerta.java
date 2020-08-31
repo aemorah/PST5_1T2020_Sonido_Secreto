@@ -119,7 +119,7 @@ public class DesbloquearPuerta extends AppCompatActivity {
                     assert p != null;
                     String palabraClave = p.getContrasenaDispositivo().trim();
                     if (palabraClave.equalsIgnoreCase(matches.get(0).trim())) {
-                        snapshot.child("Dispositivos").child(dispoSel).getRef().setValue("on");
+                        snapshot.child("Dispositivos").child(dispoSel).child("Activacion").getRef().setValue("on");
                     } else {
                         Toast.makeText(DesbloquearPuerta.this, "Ingreso Incorrecto", Toast.LENGTH_SHORT).show();
                     }
@@ -177,7 +177,7 @@ public class DesbloquearPuerta extends AppCompatActivity {
                 listaImg.clear();
                 for (DataSnapshot objSnapchot : snapshot.getChildren()){
                     String etiqueta= objSnapchot.getKey();
-                    String status= "Status: "+ objSnapchot.getValue();
+                    String status= "Status: "+ objSnapchot.child("Activacion").getValue();
                     listaDispo.add(etiqueta);
                     listaStatus.add(status);
                     listaImg.add(R.drawable.edit_candado);
@@ -239,7 +239,7 @@ public class DesbloquearPuerta extends AppCompatActivity {
     public void cerrar(View view) {
         //System.out.println(GuardadoUsuario.parent);
         if (!dispoSel.equals("")) {
-            databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").child(dispoSel).setValue("off");
+            databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").child(dispoSel).child("Activacion").setValue("off");
         }else
             Toast.makeText(DesbloquearPuerta.this, "Seleccione un Dispositivo", Toast.LENGTH_SHORT).show();
     }

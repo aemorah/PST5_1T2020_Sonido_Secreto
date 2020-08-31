@@ -121,7 +121,7 @@ public class IngresoGuest extends AppCompatActivity {
                     assert p != null;
                     String palabraClave = p.getContrasenaDispositivo().trim();
                     if (palabraClave.equalsIgnoreCase(matches.get(0).trim())) {
-                        snapshot.child("Dispositivos").child(dispoSel).getRef().setValue("on");
+                        snapshot.child("Dispositivos").child(dispoSel).child("Activacion").getRef().setValue("on");
                     } else {
                         Toast.makeText(IngresoGuest.this, "Ingreso Incorrecto", Toast.LENGTH_SHORT).show();
                     }
@@ -180,7 +180,7 @@ public class IngresoGuest extends AppCompatActivity {
                 for (DataSnapshot objSnapchot : snapshot.getChildren()){
                     String etiqueta= objSnapchot.getKey();
                     //System.out.println(etiqueta);
-                    String status= "Status: "+ objSnapchot.getValue();
+                    String status= "Status: "+ objSnapchot.child("Activacion").getValue();
                     //System.out.println(status);
                     listaDispo.add(etiqueta);
                     listaStatus.add(status);
@@ -243,7 +243,7 @@ public class IngresoGuest extends AppCompatActivity {
     public void cerrar(View view) {
         //System.out.println(GuardadoUsuario.parent);
         if (!dispoSel.equals("")) {
-            databaseReference.child(GuardadoUsuario.parent).child("Dispositivos").child(dispoSel).setValue("off");
+            databaseReference.child(GuardadoUsuario.parent).child("Dispositivos").child(dispoSel).child("Activacion").setValue("off");
         }else
             Toast.makeText(IngresoGuest.this, "Seleccione un Dispositivo", Toast.LENGTH_SHORT).show();
     }
