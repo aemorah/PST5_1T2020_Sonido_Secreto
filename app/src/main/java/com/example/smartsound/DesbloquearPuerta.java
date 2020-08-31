@@ -35,15 +35,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IngresoGuest extends AppCompatActivity {
+public class DesbloquearPuerta extends AppCompatActivity {
     private List<String> listaDispo= new ArrayList<>();
     private  List<String> listaStatus= new ArrayList<>();
     private List<Integer> listaImg = new ArrayList<>();
     String[] arrayDis;
     String[] arraySta;
     Integer[] arrayimg;
-
-//    ArrayAdapter<String> arrayAdapterDispo;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     ArrayList<String> matches;
@@ -63,7 +61,7 @@ public class IngresoGuest extends AppCompatActivity {
         tv=findViewById(R.id.tvTitle);
         listViewDispo=findViewById(R.id.listDispo);
         inicializarFirebase();
-        databaseReference.child(GuardadoUsuario.parent).child("Usuarios").child(GuardadoUsuario.usuarioUsando).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(GuardadoUsuario.usuarioUsando).child("Datos").addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -102,7 +100,7 @@ public class IngresoGuest extends AppCompatActivity {
                     speachIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                     startActivityForResult(speachIntent, RECOGNIZER_RESULT);
                 }else
-                    Toast.makeText(IngresoGuest.this, "Seleccione Un Dispositivo", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DesbloquearPuerta.this, "Seleccione Un Dispositivo", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -112,18 +110,18 @@ public class IngresoGuest extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == RECOGNIZER_RESULT && resultCode == RESULT_OK) {
             matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            databaseReference.child(GuardadoUsuario.parent).addListenerForSingleValueEvent(new ValueEventListener() {
+            databaseReference.child(GuardadoUsuario.usuarioUsando).addListenerForSingleValueEvent(new ValueEventListener() {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     text.setText(matches.get(0).toLowerCase());
-                    Persona p = snapshot.child("Usuarios").child(GuardadoUsuario.usuarioUsando).getValue(Persona.class);
+                    Persona p = snapshot.child("Datos").getValue(Persona.class);
                     assert p != null;
                     String palabraClave = p.getContrasenaDispositivo().trim();
                     if (palabraClave.equalsIgnoreCase(matches.get(0).trim())) {
                         snapshot.child("Dispositivos").child(dispoSel).child("Activacion").getRef().setValue("on");
                     } else {
-                        Toast.makeText(IngresoGuest.this, "Ingreso Incorrecto", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DesbloquearPuerta.this, "Ingreso Incorrecto", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -139,7 +137,7 @@ public class IngresoGuest extends AppCompatActivity {
 
     }
 
-    class MyAdapter extends ArrayAdapter<String>{
+    class MyAdapter extends ArrayAdapter<String> {
         Context context;
         String[] dispositivos;
         String[] estado;
@@ -171,7 +169,7 @@ public class IngresoGuest extends AppCompatActivity {
     }
 
     private void obtenerInfo() {
-        databaseReference.child(GuardadoUsuario.parent).child("Dispositivos").addValueEventListener(new ValueEventListener() {
+        databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listaDispo.clear();
@@ -179,9 +177,7 @@ public class IngresoGuest extends AppCompatActivity {
                 listaImg.clear();
                 for (DataSnapshot objSnapchot : snapshot.getChildren()){
                     String etiqueta= objSnapchot.getKey();
-                    //System.out.println(etiqueta);
                     String status= "Status: "+ objSnapchot.child("Activacion").getValue();
-                    //System.out.println(status);
                     listaDispo.add(etiqueta);
                     listaStatus.add(status);
                     listaImg.add(R.drawable.edit_candado);
@@ -192,7 +188,7 @@ public class IngresoGuest extends AppCompatActivity {
                     arraySta = listaStatus.toArray(arraySta);
                     arrayimg=new Integer[listaImg.size()];
                     arrayimg = listaImg.toArray(arrayimg);
-                    MyAdapter adapter =new MyAdapter(IngresoGuest.this,arrayDis,arraySta,arrayimg);
+                    MyAdapter adapter =new MyAdapter(DesbloquearPuerta.this,arrayDis,arraySta,arrayimg);
                     listViewDispo.setAdapter(adapter);
                 }
 
@@ -243,9 +239,9 @@ public class IngresoGuest extends AppCompatActivity {
     public void cerrar(View view) {
         //System.out.println(GuardadoUsuario.parent);
         if (!dispoSel.equals("")) {
-            databaseReference.child(GuardadoUsuario.parent).child("Dispositivos").child(dispoSel).child("Activacion").setValue("off");
+            databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").child(dispoSel).child("Activacion").setValue("off");
         }else
-            Toast.makeText(IngresoGuest.this, "Seleccione un Dispositivo", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DesbloquearPuerta.this, "Seleccione un Dispositivo", Toast.LENGTH_SHORT).show();
     }
 
 }
