@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1B283C"
+    android:background="#353E4F"
     tools:context=".IngresoGuest">
 
     <TextView
@@ -47,10 +47,10 @@
         android:id="@+id/textVoz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="40dp"
         android:fontFamily="@font/aclonica"
         android:text=""
-        android:layout_gravity="center"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="20sp"

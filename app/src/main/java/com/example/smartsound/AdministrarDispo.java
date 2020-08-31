@@ -149,8 +149,8 @@ public class AdministrarDispo extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.app_name);
             builder.setIcon(R.drawable.edit_aviso);
-            builder.setMessage("Seguro quiere regresar?");
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            builder.setMessage("'¿Seguro quiére regresar?");
+            builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     finish();
                 }
@@ -167,8 +167,24 @@ public class AdministrarDispo extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.icon_add: {
                     if (validacionIngreso()){
-                        databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").child(ingresoU).child("Activacion").setValue("off");
-                        databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").child(ingresoU).child("Estado").setValue("no");
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle(R.string.app_name);
+                        builder.setIcon(R.drawable.edit_aviso);
+                        builder.setMessage("¿Quiére agregregar el dispositivo "+ ingresoU + "?");
+                        builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").child(ingresoU).child("Activacion").setValue("off");
+                                databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").child(ingresoU).child("Estado").setValue("no");
+                                ingreso1.setText("");
+                            }
+                        });
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
                     }else{
                         Toast.makeText(this, "Ingrese un Dispositivo", Toast.LENGTH_SHORT).show();
                     }
@@ -176,8 +192,24 @@ public class AdministrarDispo extends AppCompatActivity {
                 }
                 case R.id.icon_delete: {
                     if (!dispositivoSel.equals("")){
-                        databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").child(dispositivoSel).removeValue();
-                        dispositivoSel="";
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle(R.string.app_name);
+                        builder.setIcon(R.drawable.edit_aviso);
+                        builder.setMessage("¿Quiére borrar el dispositivo "+ dispositivoSel+"?");
+                        builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").child(dispositivoSel).removeValue();
+                                dispositivoSel="";
+                            }
+                        });
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
                     }else{
                         Toast.makeText(this, "Seleccione un Dispositivo que Desee Borrar", Toast.LENGTH_SHORT).show();
                     }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1B283C"
+    android:background="#353E4F"
 
     tools:context=".AdministrarUsuarios">
 
@@ -24,10 +24,10 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/aclonica"
         android:text="Usted cuenta con los siguientes usuarios:"
-        app:layout_constraintEnd_toEndOf="parent"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
         android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.164"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />

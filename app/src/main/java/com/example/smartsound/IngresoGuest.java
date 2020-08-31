@@ -51,7 +51,6 @@ public class IngresoGuest extends AppCompatActivity {
     TextView tv;
 
     String dispoSel;
-    private ImageView image;
     private TextView text;
     private static final int RECOGNIZER_RESULT =1;
     ListView listViewDispo;
@@ -91,7 +90,7 @@ public class IngresoGuest extends AppCompatActivity {
 
 
         //Aqui empieza lo del reconocimiento de voz
-        image=findViewById(R.id.imageView);
+        ImageView image = findViewById(R.id.imageView);
         text=findViewById(R.id.textVoz);
         image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,9 +177,7 @@ public class IngresoGuest extends AppCompatActivity {
                 listaImg.clear();
                 for (DataSnapshot objSnapchot : snapshot.getChildren()){
                     String etiqueta= objSnapchot.getKey();
-                    //System.out.println(etiqueta);
                     String status= "Status: "+ objSnapchot.child("Activacion").getValue();
-                    //System.out.println(status);
                     listaDispo.add(etiqueta);
                     listaStatus.add(status);
                     listaImg.add(R.drawable.edit_candado);

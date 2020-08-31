@@ -4,18 +4,11 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-
 import com.example.smartsound.model.Persona;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
@@ -24,20 +17,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
-//import com.example.smartsound.model.Persona;
 
 public class MainActivity extends AppCompatActivity {
-
-
     EditText user, nombre, apellido, correo, password, celular,contraDispo;
-    ListView listViewPersonas;
     String valorUser, valorNom, valorCorreo, valorContra, valorApellido, valorCelu, valorPassDispo;
-
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +36,9 @@ public class MainActivity extends AppCompatActivity {
         password=findViewById(R.id.contra);
         celular=findViewById(R.id.celular);
         contraDispo=findViewById(R.id.contraDis);
-
         inicializarFirebase();
 
     }
-
-
     private void inicializarFirebase(){
         FirebaseApp.initializeApp(this);
         firebaseDatabase=FirebaseDatabase.getInstance();
@@ -64,82 +47,67 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_ingreso,menu);
+        getMenuInflater().inflate(R.menu.menu_agregar,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.icon_exit) {
+            regresar();
+        } else {
+            if (validaciones() && item.getItemId() == R.id.icon_add) {
+                validarUsuarioIngreso();
+            }
 
-        if(item.getItemId() == R.id.icon_exit){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.app_name);
-            builder.setIcon(R.drawable.edit_aviso);
-            builder.setMessage("Seguro quiere regresar?");
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    finish();
-                }
-            });
-            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
-            AlertDialog alert = builder.create();
-            alert.show();
+//                    case R.id.icon_save: {
+//                        Persona per = new Persona();
+//                        //per.setPid(personaSel.getPid());
+//                        per.setUsuario(user.getText().toString().trim());
+//                        per.setApellidos(apellido.getText().toString().trim());
+//                        per.setNombre(nombre.getText().toString().trim());
+//                        per.setCorreo(correo.getText().toString().trim());
+//                        per.setClave(password.getText().toString().trim());
+//                        per.setTelefono(celular.getText().toString().trim());
+//                        per.setContrasenaDispositivo(contraDispo.getText().toString());
+//                        databaseReference.child(per.getUsuario()).child("Datos").setValue(per);
+//                        Toast.makeText(this, "Actualizar", Toast.LENGTH_SHORT).show();
+//                        vaciar();
+//                        break;
+//                    }
+        }
+        return true;
+    }
 
-        }else{
-            if (validaciones()) {
-                switch (item.getItemId()) {
-                    case R.id.icon_add: {
-                        Persona per = new Persona();
-                        //per.setPid(UUID.randomUUID().toString());
-                        per.setApellidos(valorApellido);
-                        per.setClave(valorContra);
-                        per.setCorreo(valorCorreo);
-                        per.setUsuario(valorUser);
-                        per.setNombre(valorNom);
-                        per.setTelefono(valorCelu);
-                        per.setContrasenaDispositivo(valorPassDispo);
-                        databaseReference.child(per.getUsuario()).child("Datos").setValue(per);
-                        Toast.makeText(this, "Agregar", Toast.LENGTH_SHORT).show();
-                        vaciar();
-                        break;
-                    }
-                    case R.id.icon_save: {
-                        Persona per = new Persona();
-                        //per.setPid(personaSel.getPid());
-                        per.setUsuario(user.getText().toString().trim());
-                        per.setApellidos(apellido.getText().toString().trim());
-                        per.setNombre(nombre.getText().toString().trim());
-                        per.setCorreo(correo.getText().toString().trim());
-                        per.setClave(password.getText().toString().trim());
-                        per.setTelefono(celular.getText().toString().trim());
-                        per.setContrasenaDispositivo(contraDispo.getText().toString());
-                        databaseReference.child(per.getUsuario()).child("Datos").setValue(per);
-                        Toast.makeText(this, "Actualizar", Toast.LENGTH_SHORT).show();
-                        vaciar();
-                        break;
-                    }
-                    case R.id.icon_delete: {
-                        Persona per = new Persona();
-                        //per.setPid(personaSel.getPid());
-                        databaseReference.child("Administrador").child(per.getUsuario()).removeValue();
-                        Toast.makeText(this, "Borrar", Toast.LENGTH_SHORT).show();
-                        vaciar();
-                        break;
-                    }
-                    default:
-                        break;
+    private void validarUsuarioIngreso(){
+        databaseReference.child("UsersRegis").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Persona per = new Persona();
+                per.setApellidos(valorApellido);
+                per.setClave(valorContra);
+                per.setCorreo(valorCorreo);
+                per.setUsuario(valorUser);
+                per.setNombre(valorNom);
+                per.setTelefono(valorCelu);
+                per.setContrasenaDispositivo(valorPassDispo);
+                if (!snapshot.hasChild(per.getUsuario())) {
+                    databaseReference.child(per.getUsuario()).child("Datos").setValue(per);
+                    databaseReference.child("UsersRegis").child(per.getUsuario()).setValue(0);
+                    Toast.makeText(MainActivity.this, "Agregado", Toast.LENGTH_SHORT).show();
+                    vaciar();
+                } else {
+                    user.setError("Se usuario ya en uso");
                 }
             }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-        }
-        return true;
-
+            }
+        });
     }
+
 
     private void vaciar(){
         user.setText("");
@@ -177,10 +145,39 @@ public class MainActivity extends AppCompatActivity {
             if (valorPassDispo.equals(""))
                 contraDispo.setError("Se requiere el Contraseña para el dispositivo");
             return false;
-        }
-
-        else
+        } else
             return true;
 
+
+    }
+
+
+    private void regresar(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.app_name);
+        builder.setIcon(R.drawable.edit_aviso);
+        builder.setMessage("Seguro quiere regresar?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }
+
+
+
+
+
+
+
+
+
+

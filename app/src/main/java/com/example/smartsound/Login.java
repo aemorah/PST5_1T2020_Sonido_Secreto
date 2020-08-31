@@ -53,8 +53,6 @@ public class Login extends AppCompatActivity {
 
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    //System.out.println(snapshot);
-                    //System.out.println(snapshot.child(et1.getText().toString()).exists());
                     int comprobador = 0;
                     if (snapshot.child(ingreUser).exists()) {
                         Persona p = snapshot.child(ingreUser).child("Datos").getValue(Persona.class);
@@ -108,7 +106,7 @@ public class Login extends AppCompatActivity {
                 et1.setError("Se requiere el Usuario");
             }
             if (ingPass.equals("")) {
-                et2.setError("Se requiere el Contraseña");
+                et2.setError("Se requiere la Contraseña");
             }
         }
 
@@ -119,7 +117,6 @@ public class Login extends AppCompatActivity {
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
     }
-
 
 
 

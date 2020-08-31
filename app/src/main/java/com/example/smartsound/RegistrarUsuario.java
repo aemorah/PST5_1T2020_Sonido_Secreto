@@ -12,8 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.smartsound.model.GuardadoUsuario;
 import com.example.smartsound.model.Persona;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class RegistrarUsuario extends AppCompatActivity {
@@ -44,9 +47,27 @@ public class RegistrarUsuario extends AppCompatActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_ingreso,menu);
+        getMenuInflater().inflate(R.menu.menu_agregar,menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId() == R.id.icon_exit){
+            iconoSalida();
+
+        }else{
+            if (validaciones() && item.getItemId() == R.id.icon_add) {
+                validarUsuarioIngreso();
+            }
+        }
+        return true;
+
+    }
+
+
+
     private boolean validaciones(){
         valorUser= user.getText().toString().toLowerCase().trim();
         valorNom=nombre.getText().toString().trim();
@@ -79,54 +100,25 @@ public class RegistrarUsuario extends AppCompatActivity {
             return true;
 
     }
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        if(item.getItemId() == R.id.icon_exit){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.app_name);
-            builder.setIcon(R.drawable.edit_aviso);
-            builder.setMessage("Seguro quiere regresar?");
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    finish();
-                }
-            });
-            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
-            AlertDialog alert = builder.create();
-            alert.show();
 
-        }else{
-            if (validaciones()) {
-                switch (item.getItemId()) {
-                    case R.id.icon_add: {
-                        Persona per = new Persona();
-                        //per.setPid(UUID.randomUUID().toString());
-                        per.setApellidos(valorApellido);
-                        per.setClave(valorContra);
-                        per.setCorreo(valorCorreo);
-                        per.setUsuario(valorUser);
-                        per.setNombre(valorNom);
-                        per.setTelefono(valorCelu);
-                        per.setContrasenaDispositivo(valorPassDispo);
-                        databaseReference.child(GuardadoUsuario.usuarioUsando).child("Usuarios").child(per.getUsuario()).setValue(per);
-                        Toast.makeText(this, "Agregar", Toast.LENGTH_SHORT).show();
-                        vaciar();
-                        break;
-                    }
-                    default:
-                        break;
-                }
+    private void iconoSalida(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.app_name);
+        builder.setIcon(R.drawable.edit_aviso);
+        builder.setMessage("Seguro quiere regresar?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
             }
-
-
-        }
-        return true;
-
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void vaciar(){
@@ -139,5 +131,33 @@ public class RegistrarUsuario extends AppCompatActivity {
         contraDispo.setText("");
     }
 
+    private void validarUsuarioIngreso(){
+        databaseReference.child("UsersRegis").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Persona per = new Persona();
+                per.setApellidos(valorApellido);
+                per.setClave(valorContra);
+                per.setCorreo(valorCorreo);
+                per.setUsuario(valorUser);
+                per.setNombre(valorNom);
+                per.setTelefono(valorCelu);
+                per.setContrasenaDispositivo(valorPassDispo);
+                if (!snapshot.hasChild(per.getUsuario())) {
+                    databaseReference.child(GuardadoUsuario.usuarioUsando).child("Usuarios").child(per.getUsuario()).setValue(per);
+                    databaseReference.child("UsersRegis").child(per.getUsuario()).setValue(0);
+                    Toast.makeText(RegistrarUsuario.this, "Agregado", Toast.LENGTH_SHORT).show();
+                    vaciar();
+                } else {
+                    user.setError("Se usuario ya en uso");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
 }

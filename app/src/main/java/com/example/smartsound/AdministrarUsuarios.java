@@ -34,7 +34,6 @@ import java.util.List;
 
 public class AdministrarUsuarios extends AppCompatActivity {
     private ListView listaUsuarios;
-    private TextView bienvenida;
     String userSel;
     private List<String> listaNombres= new ArrayList<>();
     private List<String> listaDes=new ArrayList<>();
@@ -48,8 +47,8 @@ public class AdministrarUsuarios extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_administrar_usuarios);
-        listaUsuarios=(ListView) findViewById(R.id.listViewUsuarios);
-        bienvenida=(TextView) findViewById(R.id.textView7);
+        listaUsuarios= findViewById(R.id.listViewUsuarios);
+        TextView bienvenida = findViewById(R.id.textView7);
         bienvenida.setText("Bienvenido  "+ GuardadoUsuario.usuarioUsando);
         inicializarFirebase();
         obtenerInfo();
@@ -129,7 +128,23 @@ public class AdministrarUsuarios extends AppCompatActivity {
             alert.show();
 
         }else{
-            databaseReference.child(GuardadoUsuario.usuarioUsando).child("Usuarios").child(userSel).removeValue();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.app_name);
+            builder.setIcon(R.drawable.edit_aviso);
+            builder.setMessage("Seguro quiere borrar el usuario "+ userSel+ "?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    databaseReference.child(GuardadoUsuario.usuarioUsando).child("Usuarios").child(userSel).removeValue();
+                    databaseReference.child("UsersRegis").child(userSel).removeValue();
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
         return true;
 
