@@ -1,9 +1,5 @@
 package com.example.smartsound;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +11,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+
 import com.example.smartsound.model.Persona;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +26,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
+//import com.example.smartsound.model.Persona;
 
 public class MainActivity extends AppCompatActivity {
     private List<Persona> listaPersonas= new ArrayList<Persona>();
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         nombre=findViewById(R.id.nom);
         apellido=findViewById(R.id.apellido);
         correo=findViewById(R.id.correo);
-        password=findViewById(R.id.contra);
+        password=findViewById(R.id.apellido);
         celular=findViewById(R.id.celular);
         contraDispo=findViewById(R.id.contraDis);
 

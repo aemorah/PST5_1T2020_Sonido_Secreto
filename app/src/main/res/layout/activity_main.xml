@@ -85,7 +85,7 @@
         <EditText
             android:id="@+id/apellido"
             android:layout_width="350dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
@@ -93,11 +93,11 @@
             android:background="@drawable/edit_round"
             android:drawableStart="@drawable/edit_nombre"
             android:drawablePadding="10dp"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
             android:ems="10"
             android:hint="@string/ingrese_sus_apellidos"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp" />
 
         <TextView
             android:id="@+id/textView5"
