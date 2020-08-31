@@ -89,13 +89,6 @@ public class IngresoGuest extends AppCompatActivity {
             }
         });
 
-//        listViewDispo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                dispoSel= (String) adapterView.getItemAtPosition(i);
-//            }
-//        });
-
 
 
         //Aqui empieza lo del reconocimiento de voz
@@ -139,9 +132,6 @@ public class IngresoGuest extends AppCompatActivity {
 
                 }
             });
-
-            //System.out.println(matches.get(0));
-            //prueba de commit
 
         }
 
@@ -204,9 +194,6 @@ public class IngresoGuest extends AppCompatActivity {
                     arrayimg = listaImg.toArray(arrayimg);
                     MyAdapter adapter =new MyAdapter(IngresoGuest.this,arrayDis,arraySta,arrayimg);
                     listViewDispo.setAdapter(adapter);
-
-//                    arrayAdapterDispo = new ArrayAdapter<String>(IngresoGuest.this,android.R.layout.simple_list_item_1,listaDispo);
-//                    listViewDispo.setAdapter(arrayAdapterDispo);
                 }
 
             }
