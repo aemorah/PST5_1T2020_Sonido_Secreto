@@ -20,14 +20,24 @@
         <TextView
             android:id="@+id/interTitulo"
             android:layout_width="match_parent"
-            android:layout_height="63dp"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:fontFamily="@font/aclonica"
             android:gravity="center_horizontal|center_vertical"
             android:text="Usuario"
-            android:textColor="#000"
+            android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/aclonica"
+            android:textColor="#FFFFFF"
+            
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_margin="5dp"
+            android:textSize="18sp"
+            android:id="@+id/descripcion"/>
 
     </LinearLayout>
 

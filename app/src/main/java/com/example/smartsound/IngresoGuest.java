@@ -78,7 +78,6 @@ public class IngresoGuest extends AppCompatActivity {
             }
         });
         obtenerInfo();
-        System.out.println(listaDispo);
         dispoSel="";
 
         listViewDispo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
