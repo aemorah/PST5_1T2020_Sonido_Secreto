@@ -1,11 +1,5 @@
 package com.example.smartsound.model;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
-import java.util.Objects;
-
 public class Persona {
     //private String pid;
     private String nombre;
