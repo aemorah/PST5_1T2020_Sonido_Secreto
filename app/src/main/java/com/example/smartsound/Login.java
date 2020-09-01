@@ -54,10 +54,12 @@ public class Login extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     int comprobador = 0;
-                    if (snapshot.child(ingreUser).exists()) {
+                    if (snapshot.hasChild(ingreUser) ) {
                         Persona p = snapshot.child(ingreUser).child("Datos").getValue(Persona.class);
                         dato1 = p.getUsuario();
                         contra = p.getClave();
+                        System.out.println(contra);
+                        System.out.println(dato1);
                         if (ingPass.equals(contra)) {
                             et1.setText("");
                             et2.setText("");
@@ -65,11 +67,12 @@ public class Login extends AppCompatActivity {
                             Intent i = new Intent(Login.this, MenuIngreso.class);
                             startActivity(i);
                         } else
-                            Toast.makeText(Login.this, "Contraseña incorrecta",
+                            Toast.makeText(Login.this, "Contraseña incorrecta1",
                                     Toast.LENGTH_SHORT).show();
                     } else {
                         for (DataSnapshot objSnapchot : snapshot.getChildren()) {
                             if (objSnapchot.hasChild("Usuarios/" + ingreUser)) {
+                                System.out.println("paso");
                                 Persona p = objSnapchot.child("Usuarios").child(ingreUser).getValue(Persona.class);
                                 dato1 = p.getUsuario();
                                 contra = p.getClave();
@@ -82,7 +85,7 @@ public class Login extends AppCompatActivity {
                                     Intent i = new Intent(Login.this, IngresoGuest.class);
                                     startActivity(i);
                                 } else
-                                    Toast.makeText(Login.this, "Contraseña incorrecta",
+                                    Toast.makeText(Login.this, "Contraseña incorrecta2",
                                             Toast.LENGTH_SHORT).show();
                             }
                         }
