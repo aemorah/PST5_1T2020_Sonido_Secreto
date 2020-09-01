@@ -180,7 +180,7 @@ public class IngresoGuest extends AppCompatActivity {
                     String status= "Status: "+ objSnapchot.child("Activacion").getValue();
                     listaDispo.add(etiqueta);
                     listaStatus.add(status);
-                    listaImg.add(R.drawable.edit_candado);
+                    listaImg.add(R.drawable.ic_lock);
 
                     arrayDis=new String[listaDispo.size()];
                     arrayDis = listaDispo.toArray(arrayDis);

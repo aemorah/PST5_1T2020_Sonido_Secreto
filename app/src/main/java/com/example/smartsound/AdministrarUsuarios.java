@@ -80,7 +80,7 @@ public class AdministrarUsuarios extends AppCompatActivity {
                     listaNombres.add(etiqueta);
                     listaDes.add("Nombre: "+objSnapchot.child("nombre").getValue()+" "+
                             objSnapchot.child("apellidos").getValue());
-                    listaImg.add(R.drawable.edit_user);
+                    listaImg.add(R.drawable.ic_person);
 
                     arrayDis=new String[listaNombres.size()];
                     arrayDis = listaNombres.toArray(arrayDis);

@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Agregado", Toast.LENGTH_SHORT).show();
                     vaciar();
                 } else {
-                    user.setError("Se usuario ya en uso");
+                    user.setError("Ya existe dicho usuario");
                 }
             }
 

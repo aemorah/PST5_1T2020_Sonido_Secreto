@@ -11,17 +11,18 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="278dp"
-        android:layout_height="250dp"
+        android:layout_width="259dp"
+        android:layout_height="224dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        app:srcCompat="@drawable/mic_multi" />
+        app:srcCompat="@drawable/icon_4399555_640" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:fontFamily="@font/aclonica"
         android:text="Login in:"
@@ -52,7 +53,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/edit_round"
-        android:drawableLeft="@drawable/edit_candado"
+        android:drawableLeft="@drawable/ic_lock_dark"
         android:drawablePadding="10dp"
         android:ems="10"
         android:hint="Contraseña"

@@ -6,11 +6,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +37,16 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class DesbloquearPuerta extends AppCompatActivity {
     private List<String> listaDispo= new ArrayList<>();
@@ -45,10 +58,19 @@ public class DesbloquearPuerta extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     ArrayList<String> matches;
+
+
+     String sEmail;
+     String sPassword;
+
+     int contador = 1;
+
+
     //Parametros del reconocimiento de voz
     TextView tv;
 
     String dispoSel;
+
     private ImageView image;
     private TextView text;
     private static final int RECOGNIZER_RESULT =1;
@@ -60,6 +82,9 @@ public class DesbloquearPuerta extends AppCompatActivity {
         setContentView(R.layout.activity_ingreso_guest);
         tv=findViewById(R.id.tvTitle);
         listViewDispo=findViewById(R.id.listDispo);
+        //Credenciales del que envia
+        sEmail="smartsound.prueba@gmail.com";
+        sPassword="Xsq12345";
         inicializarFirebase();
         databaseReference.child(GuardadoUsuario.usuarioUsando).child("Datos").addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
@@ -111,6 +136,8 @@ public class DesbloquearPuerta extends AppCompatActivity {
         if (requestCode == RECOGNIZER_RESULT && resultCode == RESULT_OK) {
             matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             databaseReference.child(GuardadoUsuario.usuarioUsando).addListenerForSingleValueEvent(new ValueEventListener() {
+
+
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -118,10 +145,51 @@ public class DesbloquearPuerta extends AppCompatActivity {
                     Persona p = snapshot.child("Datos").getValue(Persona.class);
                     assert p != null;
                     String palabraClave = p.getContrasenaDispositivo().trim();
+                    String correoRec = p.getCorreo();
+                    System.out.println(correoRec);
                     if (palabraClave.equalsIgnoreCase(matches.get(0).trim())) {
                         snapshot.child("Dispositivos").child(dispoSel).child("Activacion").getRef().setValue("on");
                     } else {
                         Toast.makeText(DesbloquearPuerta.this, "Ingreso Incorrecto", Toast.LENGTH_SHORT).show();
+
+                        if (contador> 3) {
+
+                            //Inicializan las propiedades para mandar el mensaje
+                            Properties proporties = new Properties();
+                            proporties.put("mail.smtp.auth", "true");
+                            proporties.put("mail.smtp.starttls.enable", "true");
+                            proporties.put("mail.smtp.host", "smtp.gmail.com");
+                            proporties.put("mail.smtp.port", "587");
+
+                            //inicio de sesion
+                            Session session = Session.getInstance(proporties, new Authenticator() {
+                                @Override
+                                protected PasswordAuthentication getPasswordAuthentication() {
+                                    return new PasswordAuthentication(sEmail, sPassword);
+                                }
+                            });
+
+                            try {
+                                //inicio del contenido del mensaje
+                                Message message = new MimeMessage(session);
+                                //correo del que manda
+                                message.setFrom(new InternetAddress(sEmail));
+                                //correo del que recibe
+                                message.setRecipients(Message.RecipientType.TO,
+                                        InternetAddress.parse(correoRec));
+                                //email tema
+                                message.setSubject("Aviso de Seguridad, SmartSound");
+                                //email message
+                                message.setText("Aviso: Se ha intentado ingresar a la puerta de " + dispoSel + " varias veces.\n Por favor, revisar.");
+                                //mandar correo
+                                new SendMail().execute(message);
+
+                            } catch (MessagingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        contador++;
+
                     }
                 }
 
@@ -135,6 +203,55 @@ public class DesbloquearPuerta extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    private class SendMail extends AsyncTask<Message,String,String> {
+        //inicio dle proceso de dialogo
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(DesbloquearPuerta.this, "Numero de intentos exedidos","Informando....",true);
+
+        }
+
+        @Override
+        protected String doInBackground(Message... messages) {
+            try {
+                Transport.send(messages[0]);
+                return "Sucess";
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return "error";
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            progressDialog.dismiss();
+            if (s.equals("Sucess")){
+                //Success
+                AlertDialog.Builder builder = new AlertDialog.Builder(DesbloquearPuerta.this);
+                builder.setCancelable(false);
+                builder.setTitle(Html.fromHtml("<font color='#509324'>Success</font>"));
+                builder.setMessage("Email mandado con exito");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.show();
+            }else{
+                //Fail
+                Toast.makeText(getApplicationContext(),"Algo salio mal",Toast.LENGTH_SHORT).show();
+
+
+            }
+        }
     }
 
     class MyAdapter extends ArrayAdapter<String> {
@@ -180,7 +297,7 @@ public class DesbloquearPuerta extends AppCompatActivity {
                     String status= "Status: "+ objSnapchot.child("Activacion").getValue();
                     listaDispo.add(etiqueta);
                     listaStatus.add(status);
-                    listaImg.add(R.drawable.edit_candado);
+                    listaImg.add(R.drawable.ic_lock);
 
                     arrayDis=new String[listaDispo.size()];
                     arrayDis = listaDispo.toArray(arrayDis);
