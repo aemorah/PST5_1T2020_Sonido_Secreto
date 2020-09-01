@@ -66,7 +66,6 @@ public class DesbloquearPuerta extends AppCompatActivity {
     //Parametros del reconocimiento de voz
     TextView tv;
     String dispoSel;
-    private ImageView image;
     private TextView text;
     private static final int RECOGNIZER_RESULT =1;
     ListView listViewDispo;
@@ -98,19 +97,17 @@ public class DesbloquearPuerta extends AppCompatActivity {
             }
         });
         obtenerInfo();
-        System.out.println(listaDispo);
         dispoSel="";
         //se obtiene el valor del elemento seleccionado en el listview
         listViewDispo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 dispoSel= (String) adapterView.getItemAtPosition(i);
-                System.out.println(dispoSel);
             }
         });
 
         //Aqui empieza lo del reconocimiento de voz
-        image=findViewById(R.id.imageView);
+        ImageView image = findViewById(R.id.imageView);
         text=findViewById(R.id.textVoz);
         image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +139,6 @@ public class DesbloquearPuerta extends AppCompatActivity {
                     assert p != null;
                     String palabraClave = p.getContrasenaDispositivo().trim();
                     String correoRec = p.getCorreo();
-                    System.out.println(correoRec);
                     //si la palabra coincide entonces se cambia el valor
                     if (palabraClave.equalsIgnoreCase(matches.get(0).trim())) {
                         snapshot.child("Dispositivos").child(dispoSel).child("Activacion").getRef().setValue("on");
@@ -178,7 +174,7 @@ public class DesbloquearPuerta extends AppCompatActivity {
                                 //email tema
                                 message.setSubject("Aviso de Seguridad, SmartSound");
                                 //email message
-                                message.setText("Aviso: Se ha intentado ingresar a la puerta de " + dispoSel + " varias veces.\n Por favor, revisar.");
+                                message.setText("Aviso: Se ha intentado ingresar a la puerta de " + dispoSel + " varias veces.\n\n Por favor, revisar.");
                                 //mandar correo
                                 new SendMail().execute(message);
 

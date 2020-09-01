@@ -6,11 +6,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,33 +37,50 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+//metodo de la actividad que me donde se valida el ingreso por voz
 public class IngresoGuest extends AppCompatActivity {
+    //inicializacion de variables
     private List<String> listaDispo= new ArrayList<>();
     private  List<String> listaStatus= new ArrayList<>();
     private List<Integer> listaImg = new ArrayList<>();
     String[] arrayDis;
     String[] arraySta;
     Integer[] arrayimg;
-
-//    ArrayAdapter<String> arrayAdapterDispo;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     ArrayList<String> matches;
+    String sEmail;
+    String sPassword;
+    int contador = 1;
     //Parametros del reconocimiento de voz
     TextView tv;
-
     String dispoSel;
     private TextView text;
     private static final int RECOGNIZER_RESULT =1;
     ListView listViewDispo;
 
+    //metodo onCreate que donde se inicializan los componentes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingreso_guest);
         tv=findViewById(R.id.tvTitle);
         listViewDispo=findViewById(R.id.listDispo);
+        //Se da los valores para credenciales del que envia
+        sEmail="smartsound.prueba@gmail.com";
+        sPassword="Xsq12345";
+        //se inicializa la base de datos
         inicializarFirebase();
         databaseReference.child(GuardadoUsuario.parent).child("Usuarios").child(GuardadoUsuario.usuarioUsando).addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
@@ -78,12 +98,11 @@ public class IngresoGuest extends AppCompatActivity {
         });
         obtenerInfo();
         dispoSel="";
-
+        //se obtiene el valor del elemento seleccionado en el listview
         listViewDispo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 dispoSel= (String) adapterView.getItemAtPosition(i);
-                System.out.println(dispoSel);
             }
         });
 
@@ -106,6 +125,8 @@ public class IngresoGuest extends AppCompatActivity {
 
 
     }
+
+    //metodo que se inicializa cuando se aplasta el boton para hablar, lo que activa el api
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == RECOGNIZER_RESULT && resultCode == RESULT_OK) {
@@ -116,12 +137,53 @@ public class IngresoGuest extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     text.setText(matches.get(0).toLowerCase());
                     Persona p = snapshot.child("Usuarios").child(GuardadoUsuario.usuarioUsando).getValue(Persona.class);
+                    Persona p1= snapshot.child("Datos").getValue(Persona.class);
                     assert p != null;
                     String palabraClave = p.getContrasenaDispositivo().trim();
+                    String correoRec = p1.getCorreo();
                     if (palabraClave.equalsIgnoreCase(matches.get(0).trim())) {
                         snapshot.child("Dispositivos").child(dispoSel).child("Activacion").getRef().setValue("on");
                     } else {
                         Toast.makeText(IngresoGuest.this, "Ingreso Incorrecto", Toast.LENGTH_SHORT).show();
+
+                        //si se equiva mas de 3 veces entonces se envia un correo
+                        if (contador> 3) {
+
+                            //Inicializan las propiedades para mandar el mensaje
+                            Properties proporties = new Properties();
+                            proporties.put("mail.smtp.auth", "true");
+                            proporties.put("mail.smtp.starttls.enable", "true");
+                            proporties.put("mail.smtp.host", "smtp.gmail.com");
+                            proporties.put("mail.smtp.port", "587");
+
+                            //inicio de sesion
+                            Session session = Session.getInstance(proporties, new Authenticator() {
+                                @Override
+                                protected PasswordAuthentication getPasswordAuthentication() {
+                                    return new PasswordAuthentication(sEmail, sPassword);
+                                }
+                            });
+
+                            try {
+                                //inicio del contenido del mensaje
+                                Message message = new MimeMessage(session);
+                                //correo del que manda
+                                message.setFrom(new InternetAddress(sEmail));
+                                //correo del que recibe
+                                message.setRecipients(Message.RecipientType.TO,
+                                        InternetAddress.parse(correoRec));
+                                //email tema
+                                message.setSubject("Aviso de Seguridad, SmartSound");
+                                //email message
+                                message.setText("Aviso: Se ha intentado ingresar a la puerta de " + dispoSel + " varias veces.\n\n Por favor, revisar.");
+                                //mandar correo
+                                new SendMail().execute(message);
+
+                            } catch (MessagingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        contador++;
                     }
                 }
 
@@ -137,6 +199,57 @@ public class IngresoGuest extends AppCompatActivity {
 
     }
 
+    //clase para enviar el correo
+    private class SendMail extends AsyncTask<Message,String,String> {
+        //inicio dle proceso de dialogo
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(IngresoGuest.this, "Numero de intentos exedidos","Informando....",true);
+
+        }
+
+        @Override
+        protected String doInBackground(Message... messages) {
+            try {
+                Transport.send(messages[0]);
+                return "Sucess";
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return "error";
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            progressDialog.dismiss();
+            if (s.equals("Sucess")){
+                //Success
+                AlertDialog.Builder builder = new AlertDialog.Builder(IngresoGuest.this);
+                builder.setCancelable(false);
+                builder.setTitle(Html.fromHtml("<font color='#509324'>Success</font>"));
+                builder.setMessage("Email mandado con exito");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.show();
+            }else{
+                //Fail
+                Toast.makeText(getApplicationContext(),"Algo salio mal",Toast.LENGTH_SHORT).show();
+
+
+            }
+        }
+    }
+
+    //clase myAdapter para poderle dar formato al listview
     class MyAdapter extends ArrayAdapter<String>{
         Context context;
         String[] dispositivos;
@@ -168,6 +281,7 @@ public class IngresoGuest extends AppCompatActivity {
         }
     }
 
+    //metodo donde se obtiene la informacion y se la agrega al listview
     private void obtenerInfo() {
         databaseReference.child(GuardadoUsuario.parent).child("Dispositivos").addValueEventListener(new ValueEventListener() {
             @Override
@@ -201,18 +315,21 @@ public class IngresoGuest extends AppCompatActivity {
         });
     }
 
+    //metodo para inicializar la base de datos
     private void inicializarFirebase(){
         FirebaseApp.initializeApp(this);
         firebaseDatabase= FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
     }
 
+    //metodo para cambiar el menu de la actividad
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_user,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    //metodo para asignar acciones a los botones del menu
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.icon_exit){
@@ -236,6 +353,7 @@ public class IngresoGuest extends AppCompatActivity {
         return true;
     }
 
+    //metodo para apagar el dispositivo si se aplasta el boton
     public void cerrar(View view) {
         if (!dispoSel.equals("")) {
             databaseReference.child(GuardadoUsuario.parent).child("Dispositivos").child(dispoSel).child("Activacion").setValue("off");
