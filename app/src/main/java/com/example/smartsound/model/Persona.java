@@ -1,7 +1,7 @@
 package com.example.smartsound.model;
 
+//clase persona que describe el usuario y sus parametros
 public class Persona {
-    //private String pid;
     private String nombre;
     private String apellidos;
     private String correo;
@@ -12,14 +12,6 @@ public class Persona {
 
     public Persona() {
     }
-
-    /*public String getPid() {
-        return pid;
-    }
-
-    public void setPid(String pid) {
-        this.pid = pid;
-    }*/
 
     public String getNombre() {
         return nombre;

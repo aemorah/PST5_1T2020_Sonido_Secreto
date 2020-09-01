@@ -33,7 +33,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+//Activity donde se puede añadir y quitar dispositivos
 public class AdministrarDispo extends AppCompatActivity {
+    //inicializacion de variables
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     EditText ingreso1;
@@ -49,6 +51,7 @@ public class AdministrarDispo extends AppCompatActivity {
 
     String dispositivoSel;
 
+    //metodo onCreate, para inicializar los elementos del xml y la base de datos
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +61,7 @@ public class AdministrarDispo extends AppCompatActivity {
 
         inicializarFirebase();
         obtenerInfo();
+        //se obtiene el valor al momento de selecionar algo en el listview
         listViewDispo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -68,12 +72,14 @@ public class AdministrarDispo extends AppCompatActivity {
     }
 
 
+    //metodo para inicializar la base de datos
     private void inicializarFirebase(){
         FirebaseApp.initializeApp(this);
         firebaseDatabase= FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
     }
 
+    //clase interna que permite modificar la estetica del listview
     class MyAdapter extends ArrayAdapter<String> {
         Context context;
         String[] dispositivos;
@@ -88,6 +94,7 @@ public class AdministrarDispo extends AppCompatActivity {
             this.imagenes=imagenes;
         }
 
+        //metodo para escribir inicializar los componentes del listview
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -104,6 +111,8 @@ public class AdministrarDispo extends AppCompatActivity {
             return row;
         }
     }
+
+    //metodo para obtener la informacion y escribirla en el listview
     private void obtenerInfo() {
         databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").addValueEventListener(new ValueEventListener() {
             @Override
@@ -137,14 +146,16 @@ public class AdministrarDispo extends AppCompatActivity {
         });
     }
 
+    //metodo para cambiar el layout del menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_admin_dispo,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    //metodo para darle acciones a los iconos en el menu
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
+        //accion si se decide salir
         if(item.getItemId() == R.id.icon_exit){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.app_name);
@@ -165,6 +176,7 @@ public class AdministrarDispo extends AppCompatActivity {
 
         }else{
             switch (item.getItemId()) {
+                //accion si se decide agregar
                 case R.id.icon_add: {
                     if (validacionIngreso()){
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -190,6 +202,7 @@ public class AdministrarDispo extends AppCompatActivity {
                     }
                     break;
                 }
+                //accion si se quiere borrar
                 case R.id.icon_delete: {
                     if (!dispositivoSel.equals("")){
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -223,6 +236,7 @@ public class AdministrarDispo extends AppCompatActivity {
 
     }
 
+    //metodo para validar que haya texto en el edit text.
     private boolean validacionIngreso(){
         ingresoU = ingreso1.getText().toString();
         return !ingresoU.trim().equals("");

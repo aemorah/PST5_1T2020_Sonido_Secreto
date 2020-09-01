@@ -48,7 +48,9 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+//metodo de la actividad que me donde se valida el ingreso por voz
 public class DesbloquearPuerta extends AppCompatActivity {
+    //inicializacion de variables
     private List<String> listaDispo= new ArrayList<>();
     private  List<String> listaStatus= new ArrayList<>();
     private List<Integer> listaImg = new ArrayList<>();
@@ -58,33 +60,28 @@ public class DesbloquearPuerta extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     ArrayList<String> matches;
-
-
-     String sEmail;
-     String sPassword;
-
-     int contador = 1;
-
-
+    String sEmail;
+    String sPassword;
+    int contador = 1;
     //Parametros del reconocimiento de voz
     TextView tv;
-
     String dispoSel;
-
     private ImageView image;
     private TextView text;
     private static final int RECOGNIZER_RESULT =1;
     ListView listViewDispo;
 
+    //metodo onCreate que donde se inicializan los componentes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingreso_guest);
         tv=findViewById(R.id.tvTitle);
         listViewDispo=findViewById(R.id.listDispo);
-        //Credenciales del que envia
+        //Se da los valores para credenciales del que envia
         sEmail="smartsound.prueba@gmail.com";
         sPassword="Xsq12345";
+        //se inicializa la base de datos
         inicializarFirebase();
         databaseReference.child(GuardadoUsuario.usuarioUsando).child("Datos").addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
@@ -103,7 +100,7 @@ public class DesbloquearPuerta extends AppCompatActivity {
         obtenerInfo();
         System.out.println(listaDispo);
         dispoSel="";
-
+        //se obtiene el valor del elemento seleccionado en el listview
         listViewDispo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -111,8 +108,6 @@ public class DesbloquearPuerta extends AppCompatActivity {
                 System.out.println(dispoSel);
             }
         });
-
-
 
         //Aqui empieza lo del reconocimiento de voz
         image=findViewById(R.id.imageView);
@@ -131,13 +126,14 @@ public class DesbloquearPuerta extends AppCompatActivity {
 
 
     }
+
+    //metodo que se inicializa cuando se aplasta el boton para hablar, lo que activa el api
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == RECOGNIZER_RESULT && resultCode == RESULT_OK) {
             matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            //se comienza el query para la base de datos
             databaseReference.child(GuardadoUsuario.usuarioUsando).addListenerForSingleValueEvent(new ValueEventListener() {
-
-
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -147,11 +143,13 @@ public class DesbloquearPuerta extends AppCompatActivity {
                     String palabraClave = p.getContrasenaDispositivo().trim();
                     String correoRec = p.getCorreo();
                     System.out.println(correoRec);
+                    //si la palabra coincide entonces se cambia el valor
                     if (palabraClave.equalsIgnoreCase(matches.get(0).trim())) {
                         snapshot.child("Dispositivos").child(dispoSel).child("Activacion").getRef().setValue("on");
                     } else {
                         Toast.makeText(DesbloquearPuerta.this, "Ingreso Incorrecto", Toast.LENGTH_SHORT).show();
 
+                        //si se equiva mas de 3 veces entonces se envia un correo
                         if (contador> 3) {
 
                             //Inicializan las propiedades para mandar el mensaje
@@ -205,6 +203,7 @@ public class DesbloquearPuerta extends AppCompatActivity {
 
     }
 
+    //clase para enviar el correo
     private class SendMail extends AsyncTask<Message,String,String> {
         //inicio dle proceso de dialogo
         private ProgressDialog progressDialog;
@@ -254,6 +253,7 @@ public class DesbloquearPuerta extends AppCompatActivity {
         }
     }
 
+    //clase myAdapter para poderle dar formato al listview
     class MyAdapter extends ArrayAdapter<String> {
         Context context;
         String[] dispositivos;
@@ -285,6 +285,7 @@ public class DesbloquearPuerta extends AppCompatActivity {
         }
     }
 
+    //metodo donde se obtiene la informacion y se la agrega al listview
     private void obtenerInfo() {
         databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").addValueEventListener(new ValueEventListener() {
             @Override
@@ -318,18 +319,21 @@ public class DesbloquearPuerta extends AppCompatActivity {
         });
     }
 
+    //metodo para inicializar la base de datos
     private void inicializarFirebase(){
         FirebaseApp.initializeApp(this);
         firebaseDatabase= FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
     }
 
+    //metodo para cambiar el menu de la actividad
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_user,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    //metodo para asignar acciones a los botones del menu
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.icon_exit){
@@ -353,6 +357,7 @@ public class DesbloquearPuerta extends AppCompatActivity {
         return true;
     }
 
+    //metodo para apagar el dispositivo si se aplasta el boton
     public void cerrar(View view) {
         if (!dispoSel.equals("")) {
             databaseReference.child(GuardadoUsuario.usuarioUsando).child("Dispositivos").child(dispoSel).child("Activacion").setValue("off");

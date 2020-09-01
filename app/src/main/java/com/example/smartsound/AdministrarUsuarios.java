@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.smartsound.model.GuardadoUsuario;
 import com.example.smartsound.model.Persona;
 import com.google.firebase.FirebaseApp;
@@ -32,7 +30,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+//clase para la activity donde se puede eliminar los usuarios hijo
 public class AdministrarUsuarios extends AppCompatActivity {
+    //se inicializa la variables
     private ListView listaUsuarios;
     String userSel;
     private List<String> listaNombres= new ArrayList<>();
@@ -43,6 +43,8 @@ public class AdministrarUsuarios extends AppCompatActivity {
     Integer[] arrayimg;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+
+    //metodo onCreate para inizializar todos los componentes de la activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,21 +54,24 @@ public class AdministrarUsuarios extends AppCompatActivity {
         bienvenida.setText("Bienvenido  "+ GuardadoUsuario.usuarioUsando);
         inicializarFirebase();
         obtenerInfo();
+        //se le asigna el valor da userSel de lo que se selecciono
         listaUsuarios.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 userSel= (String) adapterView.getItemAtPosition(i);
-                System.out.println(userSel);
-                System.out.println("Estoy imprimiendo la seleccion");
             }
         });
 
     }
+
+    //se inicializa la base de datos
     private void inicializarFirebase(){
         FirebaseApp.initializeApp(this);
         firebaseDatabase= FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
     }
+
+    //metodo para obtener la informacion de la base de datos para asi llenarlo en la listview
     private void obtenerInfo() {
         databaseReference.child(GuardadoUsuario.usuarioUsando).child("Usuarios").addValueEventListener(new ValueEventListener() {
             @Override
@@ -76,12 +81,10 @@ public class AdministrarUsuarios extends AppCompatActivity {
                 listaImg.clear();
                 for (DataSnapshot objSnapchot : snapshot.getChildren()){
                     String etiqueta= objSnapchot.getKey();
-
                     listaNombres.add(etiqueta);
                     listaDes.add("Nombre: "+objSnapchot.child("nombre").getValue()+" "+
                             objSnapchot.child("apellidos").getValue());
                     listaImg.add(R.drawable.ic_person);
-
                     arrayDis=new String[listaNombres.size()];
                     arrayDis = listaNombres.toArray(arrayDis);
                     arrayDes=new String[listaDes.size()];
@@ -100,12 +103,15 @@ public class AdministrarUsuarios extends AppCompatActivity {
             }
         });
     }
+
+    //metodo para cambiar el menu en la actividad
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_admin_user,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    //actividad para asignarle acciones al momento de aplastar un boton en el menu
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -153,7 +159,7 @@ public class AdministrarUsuarios extends AppCompatActivity {
 
 
 
-    //clases internas
+    //clase MyAdapter para poder darle estilo al listview
     class MyAdapter extends ArrayAdapter<String> {
         Context context;
         String[] nombres;

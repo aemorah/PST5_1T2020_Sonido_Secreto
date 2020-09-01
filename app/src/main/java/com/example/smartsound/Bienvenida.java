@@ -8,6 +8,7 @@ import android.os.Bundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
+//clase splash, que se usa para mostrar el logo por una cantidad de tiempo determinada
 public class Bienvenida extends AppCompatActivity {
     Timer timer;
 
@@ -24,6 +25,6 @@ public class Bienvenida extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 3500);
+        }, 3500); //en el delay se puede definir el tiempo del activity.
     }
 }

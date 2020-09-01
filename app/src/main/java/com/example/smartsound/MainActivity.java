@@ -17,8 +17,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
+//Clase para la actividad de registro del usuario administrador
 public class MainActivity extends AppCompatActivity {
+    //Iniciacion de variables
     EditText user, nombre, apellido, correo, password, celular,contraDispo;
     String valorUser, valorNom, valorCorreo, valorContra, valorApellido, valorCelu, valorPassDispo;
     FirebaseDatabase firebaseDatabase;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //se toman los edit text
         user=findViewById(R.id.usuario);
         nombre=findViewById(R.id.nom);
         apellido=findViewById(R.id.apellido);
@@ -36,21 +38,26 @@ public class MainActivity extends AppCompatActivity {
         password=findViewById(R.id.contra);
         celular=findViewById(R.id.celular);
         contraDispo=findViewById(R.id.contraDis);
+        //inicializamos la base de datos al comenzar la actividad
         inicializarFirebase();
 
     }
+
+    //Metodo para la inicializacion del la base de datos
     private void inicializarFirebase(){
         FirebaseApp.initializeApp(this);
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
     }
 
+    //metodo para cambiar el layout del menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_agregar,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    //metodo para decidir que accion tomar al momento de tocar un icono en el menu
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.icon_exit) {
@@ -59,27 +66,13 @@ public class MainActivity extends AppCompatActivity {
             if (validaciones() && item.getItemId() == R.id.icon_add) {
                 validarUsuarioIngreso();
             }
-
-//                    case R.id.icon_save: {
-//                        Persona per = new Persona();
-//                        //per.setPid(personaSel.getPid());
-//                        per.setUsuario(user.getText().toString().trim());
-//                        per.setApellidos(apellido.getText().toString().trim());
-//                        per.setNombre(nombre.getText().toString().trim());
-//                        per.setCorreo(correo.getText().toString().trim());
-//                        per.setClave(password.getText().toString().trim());
-//                        per.setTelefono(celular.getText().toString().trim());
-//                        per.setContrasenaDispositivo(contraDispo.getText().toString());
-//                        databaseReference.child(per.getUsuario()).child("Datos").setValue(per);
-//                        Toast.makeText(this, "Actualizar", Toast.LENGTH_SHORT).show();
-//                        vaciar();
-//                        break;
-//                    }
         }
         return true;
     }
 
+    //metodo para validar el ingreso del usuario es unico y no se repite en la base de datos
     private void validarUsuarioIngreso(){
+        //query para la base de datos
         databaseReference.child("UsersRegis").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -92,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 per.setTelefono(valorCelu);
                 per.setContrasenaDispositivo(valorPassDispo);
                 if (!snapshot.hasChild(per.getUsuario())) {
+                    //registro de valores en la base de datos
                     databaseReference.child(per.getUsuario()).child("Datos").setValue(per);
                     databaseReference.child("UsersRegis").child(per.getUsuario()).setValue(0);
                     Toast.makeText(MainActivity.this, "Agregado", Toast.LENGTH_SHORT).show();
@@ -108,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
+    //metodo para vaciar los edit text
     private void vaciar(){
         user.setText("");
         nombre.setText("");
@@ -119,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
         contraDispo.setText("");
     }
 
+
+    //validaciones para saber si se han ingresado todos los campos en el menu del registro.
     private boolean validaciones(){
         valorUser= user.getText().toString().toLowerCase().trim();
         valorNom=nombre.getText().toString().trim();
@@ -151,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    //metodo de regreso para cuando se aplasta el icono de regresar.
     private void regresar(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name);

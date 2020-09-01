@@ -18,10 +18,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
+//Clase para la actividad de registro del usuario hijo
 public class RegistrarUsuario extends AppCompatActivity {
-
-
+    //Iniciacion de variables
     EditText user, nombre, apellido, correo, password, celular,contraDispo;
     String valorUser, valorNom, valorCorreo, valorContra, valorApellido, valorCelu, valorPassDispo;
     FirebaseDatabase firebaseDatabase;
@@ -37,20 +36,25 @@ public class RegistrarUsuario extends AppCompatActivity {
         password=findViewById(R.id.contra);
         celular=findViewById(R.id.celular);
         contraDispo=findViewById(R.id.contraDis);
+        //inicializamos la base de datos al comenzar la actividad
         inicializarFirebase();
     }
 
+    //Metodo para la inicializacion del la base de datos
     private void inicializarFirebase(){
         FirebaseApp.initializeApp(this);
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
     }
+
+    //metodo para cambiar el layout del menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_agregar,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    //metodo para decidir que accion tomar al momento de tocar un icono en el menu
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -67,7 +71,7 @@ public class RegistrarUsuario extends AppCompatActivity {
     }
 
 
-
+    //validaciones para saber si se han ingresado todos los campos en el menu del registro.
     private boolean validaciones(){
         valorUser= user.getText().toString().toLowerCase().trim();
         valorNom=nombre.getText().toString().trim();
@@ -101,7 +105,7 @@ public class RegistrarUsuario extends AppCompatActivity {
 
     }
 
-
+    //metodo de regreso para cuando se aplasta el icono de salida.
     private void iconoSalida(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name);
@@ -121,6 +125,7 @@ public class RegistrarUsuario extends AppCompatActivity {
         alert.show();
     }
 
+    //validaciones para saber si se han ingresado todos los campos en el menu del registro.
     private void vaciar(){
         user.setText("");
         nombre.setText("");
@@ -131,6 +136,7 @@ public class RegistrarUsuario extends AppCompatActivity {
         contraDispo.setText("");
     }
 
+    //metodo para validar el ingreso del usuario es unico y no se repite en la base de datos
     private void validarUsuarioIngreso(){
         databaseReference.child("UsersRegis").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
