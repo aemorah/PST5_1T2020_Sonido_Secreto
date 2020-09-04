@@ -1,12 +1,12 @@
 #include <IOXhop_FirebaseStream.h>
-#include <IOXhop_FirebaseESP32.h>
+#include <IOXhop_FirebaseESP32.h>                               //Se importan las librerías para conectar con firebase
 
 
 #include <WiFi.h>
 
 
-#define FIREBASE_HOST "smartsound-2055a.firebaseio.com"   
-#define FIREBASE_AUTH "s4zlUBx1e7WMdTmJobvOsTt3WafQqhGDOMOVQUrH"   
+#define FIREBASE_HOST "smartsound-2055a.firebaseio.com"           //Nombre del host en firebase
+#define FIREBASE_AUTH "s4zlUBx1e7WMdTmJobvOsTt3WafQqhGDOMOVQUrH"  //clave de autenticación de firebase
 #define WIFI_SSID "NETLIFE-BAMBOO"               
 #define WIFI_PASSWORD "XXXXXXXXXX"
 
